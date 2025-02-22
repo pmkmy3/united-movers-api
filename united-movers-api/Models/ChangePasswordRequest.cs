@@ -2,7 +2,7 @@
 {
     public class ChangePasswordRequest
     {
-        public int Email { get; set; }
+        public string UserName { get; set; }
 
         public string OldPassword { get; set; }
 

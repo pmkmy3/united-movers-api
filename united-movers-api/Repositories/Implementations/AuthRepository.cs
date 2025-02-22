@@ -58,7 +58,7 @@ namespace united_movers_api.Repositories
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[ChangePassword]";
-                    command.Parameters.Add(Utils.AddParameter(command, "@Username", request.Email, DbType.String));
+                    command.Parameters.Add(Utils.AddParameter(command, "@Username", request.UserName, DbType.String));
                     command.Parameters.Add(Utils.AddParameter(command, "@OldPassword", request.OldPassword, DbType.String));
                     command.Parameters.Add(Utils.AddParameter(command, "@NewPassword", request.NewPassword, DbType.String));
                     _dbConnection.Open();
@@ -87,7 +87,7 @@ namespace united_movers_api.Repositories
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[ForgotPassword]";
-                    command.Parameters.Add(Utils.AddParameter(command, "@UserName", request.Email, DbType.String));
+                    command.Parameters.Add(Utils.AddParameter(command, "@UserName", request.UserName, DbType.String));
                     command.Parameters.Add(Utils.AddParameter(command, "@TempPassword", request.NewPassword, DbType.String));
                     command.Parameters.Add(Utils.AddParameter(command, "@SecretPin", request.SecurityQuestion, DbType.String));
                     _dbConnection.Open();
