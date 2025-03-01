@@ -4,7 +4,7 @@ namespace united_movers_api.Services
 {
     public interface IAuthService
     {
-        LoginResponse Login(LoginRequest request);
+        Task<LoginResponse> LoginAsync(LoginRequest request);
 
         bool ChangePassword(ChangePasswordRequest request);
 

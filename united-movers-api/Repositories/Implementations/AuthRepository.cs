@@ -13,7 +13,7 @@ namespace united_movers_api.Repositories
             this._dbConnection = dbConnection;
         }
 
-        public LoginResponse Authenticate(LoginRequest request)
+        public async Task<IDataReader> AuthenticateAsync(LoginRequest request)
         {
             try
             {
@@ -23,18 +23,15 @@ namespace united_movers_api.Repositories
                     command.CommandText = "[dbo].[ValidateLogin]";
                     command.Parameters.Add(Utils.AddParameter(command, "@UserName", request.UserName, DbType.String));
                     command.Parameters.Add(Utils.AddParameter(command, "@Password", request.Password, DbType.String));
-                    var response = new LoginResponse() { EmployeeId = 0, IsAuthenticated = false, IsTempPassword = false, Message = "User name or Password might be incorrect" };
+                    
                     _dbConnection.Open();
                     var reader = command.ExecuteReader();
 
-                    while (reader.Read())
+                    if (reader.Read())
                     {
-                        response.Message = "";
-                        response.IsAuthenticated = true;
-                        response.IsTempPassword = reader["IsTempPassword"] != null ? Convert.ToBoolean(reader["IsTempPassword"]) : true;
-                        response.EmployeeId = reader["EmployeeId"] != null ? Convert.ToInt32(reader["EmployeeId"]) : -1;
+                        return reader;
                     }
-                    return response;
+                    return null;
                 }
             }
             catch (Exception ex)

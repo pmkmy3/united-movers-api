@@ -1,10 +1,11 @@
-﻿using united_movers_api.Models;
+﻿using System.Data;
+using united_movers_api.Models;
 
 namespace united_movers_api.Repositories
 {
     public interface IAuthRepository
     {
-        LoginResponse Authenticate(LoginRequest request);
+        Task<IDataReader> AuthenticateAsync(LoginRequest request);
 
         bool ChangePassword(ChangePasswordRequest request);
 

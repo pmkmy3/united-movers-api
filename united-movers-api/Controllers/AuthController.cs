@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using united_movers_api.Models;
 using united_movers_api.Services;
 
@@ -16,21 +18,21 @@ namespace united_movers_api.Controllers
         }
 
         // POST: api/Auth/Login
-        [HttpPost("Login")]
-        public IActionResult Login([FromBody] LoginRequest request)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             // Error checks
             if (String.IsNullOrEmpty(request.UserName))
             {
-                return BadRequest(new LoginResponse { IsAuthenticated = false, Message = "User name needs to be entered" });
+                return null;
             }
             else if (String.IsNullOrEmpty(request.Password))
             {
-                return BadRequest(new LoginResponse { IsAuthenticated = false, Message = "Password needs to be entered" });
+                return null;
             }
 
             // Try login
-            var response = _authService.Login(request);
+            var response = await _authService.LoginAsync(request);
 
             // Return responses
             if (response != null)
@@ -38,7 +40,7 @@ namespace united_movers_api.Controllers
                 return Ok(response);
             }
 
-            return BadRequest(new LoginResponse { IsAuthenticated = false, Message = "User login unsuccessful" });
+            return null;
 
         }
 
@@ -47,6 +49,7 @@ namespace united_movers_api.Controllers
         public IActionResult ChangePassword([FromBody] ChangePasswordRequest request)
         {
             var response = _authService.ChangePassword(request);
+            var UserId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
             if (response)
             {
                 return Ok(new { HasPasswordChanged = true, Message = "Password changed successfully." });
