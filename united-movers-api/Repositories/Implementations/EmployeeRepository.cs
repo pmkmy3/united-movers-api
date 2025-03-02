@@ -545,5 +545,43 @@ namespace united_movers_api.Repositories.Implementations
 
         }
 
+
+        public async Task<bool> ActivateOrDeactivateEmployeeAsync(ActivateOrDeactivateEmployeeRequest request)
+        {
+
+            try
+            {
+                using (IDbCommand command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[ActivateOrDeActivateEmployee]";
+
+
+                    command.Parameters.Add(new SqlParameter("@EmployeeID", request.EmployeeID));
+                    command.Parameters.Add(new SqlParameter("@ActivateEmployee", request.ActivateEmployee));
+                    command.Parameters.Add(new SqlParameter("@LoggedInUser", request.LoggedInUser));
+                    command.Parameters.Add(new SqlParameter("@Comments", request.Comments));
+                    command.Parameters.Add(new SqlParameter("@Password", request.Password));
+                    _dbConnection.Open();
+
+                    await Task.Run(() => command.ExecuteNonQuery());
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to update Employee Attributes ", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+
+
+           
+        }
     }
 }

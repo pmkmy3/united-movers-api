@@ -19,5 +19,6 @@ namespace united_movers_api.Repositories.Interfaces
         Task<bool> UpdateEmployeeFinancialDetailsAsync(FinancialDetails financialDetails);
 
         Task<CreateEmployeeResponse> ValidateAndCreateEmployeeIDAsync(ValidateAndCreateEmployeeIDRequest request);
+        Task<bool> ActivateOrDeactivateEmployeeAsync(ActivateOrDeactivateEmployeeRequest request);
     }
 }

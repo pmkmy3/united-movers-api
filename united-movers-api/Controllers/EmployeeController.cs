@@ -45,17 +45,17 @@ namespace united_movers_api.Controllers
 
 
         // POST: api/Employee
-        [HttpPost]
-        public async Task<IActionResult> InsertEmployee([FromBody] Employee employee)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> InsertEmployee([FromBody] Employee employee)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            var employeeId = await _employeeService.InsertEmployeeAsync(employee);
-            return CreatedAtAction(nameof(GetEmployeeById), new { id = employeeId }, employee);
-        }
+        //    var employeeId = await _employeeService.InsertEmployeeAsync(employee);
+        //    return CreatedAtAction(nameof(GetEmployeeById), new { id = employeeId }, employee);
+        //}
 
 
         //// PUT: api/Employee/{id}
@@ -175,7 +175,23 @@ namespace united_movers_api.Controllers
             return Ok(response);
         }
 
+        [HttpPut("ActivateOrDeactivate")]
+        public async Task<IActionResult> ActivateOrDeactivateEmployee([FromBody] ActivateOrDeactivateEmployeeRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var result = await _employeeService.ActivateOrDeactivateEmployeeAsync(request);
+
+            if (!result)
+            {
+                return BadRequest("Failed to activate or deactivate employee");
+            }
+
+            return Ok("Employee activation status updated successfully");
+        }
 
     }
 }
