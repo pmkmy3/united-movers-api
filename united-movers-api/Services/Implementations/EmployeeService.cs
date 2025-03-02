@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Data.SqlClient;
 using united_movers_api.Models;
 using united_movers_api.Repositories.Implementations;
 using united_movers_api.Repositories.Interfaces;
@@ -35,6 +36,28 @@ namespace united_movers_api.Services.Implementations
         {
             return await _employeeRepository.UpdateEmployeeAsync(employee);
         }
+
+        public async Task<bool> AddEmployeeAttachmentAsync( AddEmployeeAttachment employeeAttachment)
+        {
+            return await _employeeRepository.AddEmployeeAttachmentAsync(employeeAttachment);
+        }
+
+        public async Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync(BackgroundVerification backgroundVerification)
+        {
+            return await _employeeRepository.UpdateEmployeeBackgroundVerificationDetailsAsync(backgroundVerification);    
+        
+        }
+
+        public async Task<bool> UpdateEmployeeContactInformationAsync(ContactInformation contactInformation)
+        {
+            return await _employeeRepository.UpdateEmployeeContactInformationAsync(contactInformation);
+        }
+
+        public async Task<bool> UpdateEmployeeFinancialDetailsAsync(FinancialDetails financialDetails)
+        {
+           return await _employeeRepository.UpdateEmployeeFinancialDetailsAsync (financialDetails);
+        }
+
 
     }
 }

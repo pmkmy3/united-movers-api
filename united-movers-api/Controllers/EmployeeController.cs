@@ -58,21 +58,59 @@ namespace united_movers_api.Controllers
         }
 
 
-        // PUT: api/Employee/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmployee(int id, [FromBody] Employee employee)
+        //// PUT: api/Employee/{id}
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> UpdateEmployee(int id, [FromBody] Employee employee)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    if (id != employee.EmployeeID)
+        //    {
+        //        return BadRequest("Employee ID mismatch");
+        //    }
+
+        //    var result = await _employeeService.UpdateEmployeeAsync(employee);
+        //    if (!result)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return NoContent();
+        //}
+
+        // POST: api/Employee/AddAttachment
+        [HttpPost("AddAttachment")]
+        public async Task<IActionResult> AddEmployeeAttachment([FromBody] AddEmployeeAttachment request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != employee.EmployeeID)
+            var result = await _employeeService.AddEmployeeAttachmentAsync( request);
+
+            if (!result)
             {
-                return BadRequest("Employee ID mismatch");
+                return BadRequest("Failed to add attachment");
             }
 
-            var result = await _employeeService.UpdateEmployeeAsync(employee);
+            return Ok("Attachment added successfully");
+        }
+
+
+        // PUT: api/Employee/UpdateBackgroundVerification
+        [HttpPut("UpdateBackgroundVerification")]
+        public async Task<IActionResult> UpdateEmployeeBackgroundVerificationDetails([FromBody] BackgroundVerification request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _employeeService.UpdateEmployeeBackgroundVerificationDetailsAsync(request);
             if (!result)
             {
                 return NotFound();
@@ -81,5 +119,51 @@ namespace united_movers_api.Controllers
             return NoContent();
         }
 
+        // PUT: api/Employee/UpdateContactInformation
+        [HttpPut("UpdateContactInformation")]
+        public async Task<IActionResult> UpdateEmployeeContactInformation([FromBody] ContactInformation contactInformation)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _employeeService.UpdateEmployeeContactInformationAsync(contactInformation);
+
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        // PUT: api/Employee/UpdateFinancialDetails
+        [HttpPut("UpdateFinancialDetails")]
+        public async Task<IActionResult> UpdateEmployeeFinancialDetails([FromBody] FinancialDetails financialDetails)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _employeeService.UpdateEmployeeFinancialDetailsAsync(financialDetails);
+
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+
+
+
+
     }
 }
+
+
+
+

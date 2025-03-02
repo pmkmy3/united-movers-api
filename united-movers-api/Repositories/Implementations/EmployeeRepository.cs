@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Elfie.Serialization;
+using Microsoft.Data.SqlClient;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Data;
 using united_movers_api.Common;
 using united_movers_api.Models;
@@ -317,6 +319,174 @@ namespace united_movers_api.Repositories.Implementations
                 }
             }
         }
+
+
+        public async Task<bool> AddEmployeeAttachmentAsync(AddEmployeeAttachment employeeAttachment)
+        {
+            try
+            {
+                using (IDbCommand command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[AddEmployeeAttachment]";
+
+
+                    command.Parameters.Add(new SqlParameter("@EmpID", employeeAttachment.EmpID));
+                    command.Parameters.Add(new SqlParameter("@AttachmentTypeID", employeeAttachment.AttachmentTypeID));
+                    command.Parameters.Add(new SqlParameter("@ReportTypeID", employeeAttachment.ReportTypeID));
+                    command.Parameters.Add(new SqlParameter("@NumberOfKB", employeeAttachment.NumberOfKB));
+                    command.Parameters.Add(new SqlParameter("@Resource", employeeAttachment.Resource));
+                    command.Parameters.Add(new SqlParameter("@Tags", employeeAttachment.Tags));
+                    command.Parameters.Add(new SqlParameter("@ContentType", employeeAttachment.ContentType));
+                    command.Parameters.Add(new SqlParameter("@LoggedInUserID", -1));
+                    _dbConnection.Open();
+                    await Task.Run(() => command.ExecuteNonQuery());
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to add the Attachment ", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+
+        }
+
+        public async Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync( BackgroundVerification    backgroundVerification)
+        {
+
+            try
+            {
+                using (IDbCommand command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[UpdateEmployeeBackgroundVerificationDetails]";
+
+
+                    command.Parameters.Add(new SqlParameter("@EmployeeID", backgroundVerification.EmployeeID));
+                    command.Parameters.Add(new SqlParameter("@IsBackgroundVerificationCompleted", backgroundVerification.IsBackgroundVerificationCompleted));
+                    command.Parameters.Add(new SqlParameter("@IsPhysicalVerificationCompleted", backgroundVerification.IsPhysicalVerificationCompleted));
+                    command.Parameters.Add(new SqlParameter("@BackgroundVerificationAgencyName", backgroundVerification.BackgroundVerificationAgencyName));
+
+                    _dbConnection.Open();
+                    await Task.Run(() => command.ExecuteNonQuery());
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to update the Back ground Information ", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+
+        }
+
+        public async Task<bool> UpdateEmployeeContactInformationAsync(ContactInformation contactInformation)
+        {
+
+
+
+
+            try
+            {
+                using (IDbCommand command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[UpdateEmployeeContactInformation]";
+
+
+                    command.Parameters.Add(new SqlParameter("@EmployeeID", contactInformation.EmployeeID));
+                    command.Parameters.Add(new SqlParameter("@AddressLine1", contactInformation.AddressLine1 ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@AddressLine2", contactInformation.AddressLine2 ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@AlternativeContactNumber", contactInformation.AlternativeContactNumber ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@AlternativeEmail", contactInformation.AlternativeEmail ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@City", contactInformation.City ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@EmergencyContactName", contactInformation.EmergencyContactName ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@EmergencyContactNumber", contactInformation.EmergencyContactNumber ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@EmergencyContactPersonID", contactInformation.EmergencyContactPersonID ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@EmergencyContactRelation", contactInformation.EmergencyContactRelation ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@HighestDegreeEarned", contactInformation.HighestDegreeEarned ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@Landmark", contactInformation.Landmark ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@PreviousOrgName", contactInformation.PreviousOrgName ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@State", contactInformation.State ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@Zip", contactInformation.Zip ?? (object)DBNull.Value));
+
+
+                    _dbConnection.Open();
+                    await Task.Run(() => command.ExecuteNonQuery());
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to update the Back ground Information ", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+
+             
+        }
+ 
+
+        public async Task<bool> UpdateEmployeeFinancialDetailsAsync(FinancialDetails financialDetails)
+        {
+
+            try
+            {
+                using (IDbCommand command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[UpdateEmployeeFinancialDetails]";
+
+
+                    command.Parameters.Add(new SqlParameter("@EmployeeID", financialDetails.EmployeeID));
+                    command.Parameters.Add(new SqlParameter("@BankAccountNumber", financialDetails.BankAccountNumber ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@BankName", financialDetails.BankName ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@BankIFSCCode", financialDetails.BankIFSCCode ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@InsuranceEndDate", financialDetails.InsuranceEndDate ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@InsurancePolicyNumber", financialDetails.InsurancePolicyNumber ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@InsuranceStartDate", financialDetails.InsuranceStartDate ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@InsurerName", financialDetails.InsurerName ?? (object)DBNull.Value));
+                    command.Parameters.Add(new SqlParameter("@UANNumber", financialDetails.UANNumber ?? (object)DBNull.Value));
+
+                    _dbConnection.Open();
+                    await Task.Run(() => command.ExecuteNonQuery());
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to update the Financial Information ", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+
+
+             
+        }
+ 
 
 
     }
