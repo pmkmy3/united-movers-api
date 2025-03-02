@@ -545,6 +545,50 @@ namespace united_movers_api.Repositories.Implementations
 
         }
 
+        public async Task<bool> UpdateEmployeePersonalInformation(ValidateAndCreateEmployeeIDRequest request)
+        {
+
+            try
+            {
+                using (IDbCommand command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[UpdateEmployeePersonalInformation]";
+                    command.Parameters.Add(new SqlParameter("@EmployeeID", request.EmployeeID));
+                    command.Parameters.Add(new SqlParameter("@FirstName", request.FirstName));
+                    command.Parameters.Add(new SqlParameter("@LastName", request.LastName));
+                    command.Parameters.Add(new SqlParameter("@Gender", request.Gender));
+                    command.Parameters.Add(new SqlParameter("@DateOfBirth", request.DateOfBirth));
+                    command.Parameters.Add(new SqlParameter("@AadhaarNumber", request.AadhaarNumber));
+                    command.Parameters.Add(new SqlParameter("@PAN", request.PAN));
+                    command.Parameters.Add(new SqlParameter("@ContactNumber", request.ContactNumber));
+                    command.Parameters.Add(new SqlParameter("@BloodGroup", request.BloodGroup));
+                    command.Parameters.Add(new SqlParameter("@PersonalEmailID", request.PersonalEmailID));
+                    command.Parameters.Add(new SqlParameter("@LoggedInUserID", request.LoggedInUserID));
+
+                    _dbConnection.Open();
+                    _dbConnection.Open();
+                    await Task.Run(() => command.ExecuteNonQuery());
+                    return true;
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to update the Financial Information ", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+
+        }
+
+
 
         public async Task<bool> ActivateOrDeactivateEmployeeAsync(ActivateOrDeactivateEmployeeRequest request)
         {

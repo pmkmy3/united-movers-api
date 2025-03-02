@@ -10,7 +10,7 @@ namespace united_movers_api.Controllers
     [Route("api/[controller]")]
     public class EmployeeController : ControllerBase
     {
-       
+
         private readonly IEmployeeService _employeeService;
 
         public EmployeeController(IEmployeeService employeeService)
@@ -90,7 +90,7 @@ namespace united_movers_api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _employeeService.AddEmployeeAttachmentAsync( request);
+            var result = await _employeeService.AddEmployeeAttachmentAsync(request);
 
             if (!result)
             {
@@ -164,15 +164,26 @@ namespace united_movers_api.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            var response = await _employeeService.ValidateAndCreateEmployeeIDAsync(request);
-
-            if (response == null)
+            if (request.EmployeeID > 0)
             {
-                return BadRequest("Failed to validate and create EmployeeID");
+                var result = await _employeeService.UpdateEmployeePersonalInformation(request);
+                if (!result)
+                {
+                    return BadRequest("Failed to update EmployeeID");
+                }
+                return Ok("EmployeeID updated successfully");
             }
+            else
+            {
+                var response = await _employeeService.ValidateAndCreateEmployeeIDAsync(request);
 
-            return Ok(response);
+                if (response == null)
+                {
+                    return BadRequest("Failed to validate and create EmployeeID");
+                }
+
+                return Ok(response);
+            }
         }
 
         [HttpPut("ActivateOrDeactivate")]

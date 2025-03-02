@@ -17,6 +17,8 @@ namespace united_movers_api.Repositories.Interfaces
         Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync(BackgroundVerification backgroundVerification);
         Task<bool> UpdateEmployeeContactInformationAsync(ContactInformation contactInformation);
         Task<bool> UpdateEmployeeFinancialDetailsAsync(FinancialDetails financialDetails);
+        Task<bool> UpdateEmployeePersonalInformation(ValidateAndCreateEmployeeIDRequest request);
+
 
         Task<CreateEmployeeResponse> ValidateAndCreateEmployeeIDAsync(ValidateAndCreateEmployeeIDRequest request);
         Task<bool> ActivateOrDeactivateEmployeeAsync(ActivateOrDeactivateEmployeeRequest request);

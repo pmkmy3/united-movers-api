@@ -12,5 +12,8 @@
         public string BloodGroup { get; set; }
         public string PersonalEmailID { get; set; }
         public int LoggedInUserID { get; set; }
+
+        public int EmployeeID { get; set; }
     }
+
 }
