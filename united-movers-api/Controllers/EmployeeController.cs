@@ -157,7 +157,23 @@ namespace united_movers_api.Controllers
             return NoContent();
         }
 
+        [HttpPost("ValidateAndCreateEmployeeID")]
+        public async Task<IActionResult> ValidateAndCreateEmployeeID([FromBody] ValidateAndCreateEmployeeIDRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var response = await _employeeService.ValidateAndCreateEmployeeIDAsync(request);
+
+            if (response == null)
+            {
+                return BadRequest("Failed to validate and create EmployeeID");
+            }
+
+            return Ok(response);
+        }
 
 
 

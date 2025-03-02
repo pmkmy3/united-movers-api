@@ -358,7 +358,7 @@ namespace united_movers_api.Repositories.Implementations
 
         }
 
-        public async Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync( BackgroundVerification    backgroundVerification)
+        public async Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync(BackgroundVerification backgroundVerification)
         {
 
             try
@@ -441,9 +441,9 @@ namespace united_movers_api.Repositories.Implementations
                 }
             }
 
-             
+
         }
- 
+
 
         public async Task<bool> UpdateEmployeeFinancialDetailsAsync(FinancialDetails financialDetails)
         {
@@ -484,10 +484,66 @@ namespace united_movers_api.Repositories.Implementations
             }
 
 
-             
-        }
- 
 
+        }
+
+        public async Task<CreateEmployeeResponse> ValidateAndCreateEmployeeIDAsync(ValidateAndCreateEmployeeIDRequest request)
+        {
+
+            try
+            {
+                using (IDbCommand command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[ValidateAndCreateEmployeeID]";
+
+                    command.Parameters.Add(new SqlParameter("@FirstName", request.FirstName));
+                    command.Parameters.Add(new SqlParameter("@LastName", request.LastName));
+                    command.Parameters.Add(new SqlParameter("@Gender", request.Gender));
+                    command.Parameters.Add(new SqlParameter("@DateOfBirth", request.DateOfBirth));
+                    command.Parameters.Add(new SqlParameter("@AadhaarNumber", request.AadhaarNumber));
+                    command.Parameters.Add(new SqlParameter("@PAN", request.PAN));
+                    command.Parameters.Add(new SqlParameter("@ContactNumber", request.ContactNumber));
+                    command.Parameters.Add(new SqlParameter("@BloodGroup", request.BloodGroup));
+                    command.Parameters.Add(new SqlParameter("@PersonalEmailID", request.PersonalEmailID));
+                    command.Parameters.Add(new SqlParameter("@LoggedInUserID", request.LoggedInUserID));
+
+                    _dbConnection.Open();
+                    //await Task.Run(() => command.ExecuteReader());
+                    using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
+                    {
+                        if (reader.Read())
+                        {
+                            var response = new CreateEmployeeResponse
+                            {
+                                Message = reader["Message"].ToString(),
+                                Proceedfurther = Convert.ToBoolean(reader["ProceedFurther"]),
+                                EmployeeID = Convert.ToInt32(reader["EmployeeID"])
+                            };
+                            return response;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to update the Financial Information ", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+
+        }
 
     }
 }

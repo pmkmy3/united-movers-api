@@ -58,6 +58,10 @@ namespace united_movers_api.Services.Implementations
            return await _employeeRepository.UpdateEmployeeFinancialDetailsAsync (financialDetails);
         }
 
+        public async Task<CreateEmployeeResponse> ValidateAndCreateEmployeeIDAsync(ValidateAndCreateEmployeeIDRequest request)
+        {
+        return await _employeeRepository.ValidateAndCreateEmployeeIDAsync (request);
+        }
 
     }
 }
