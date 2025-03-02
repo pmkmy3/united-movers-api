@@ -1,6 +1,6 @@
 ﻿namespace united_movers_api.Models
 {
-    public class FinancialDetails
+    public class EmployeeFinancialDetails
     {
         public int EmployeeID { get; set; }
         public string BankAccountNumber { get; set; }

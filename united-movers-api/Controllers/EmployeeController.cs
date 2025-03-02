@@ -83,7 +83,7 @@ namespace united_movers_api.Controllers
 
         // POST: api/Employee/AddAttachment
         [HttpPost("AddAttachment")]
-        public async Task<IActionResult> AddEmployeeAttachment([FromBody] AddEmployeeAttachment request)
+        public async Task<IActionResult> AddEmployeeAttachment([FromBody]  AddEmployeeAttachment request)
         {
             if (!ModelState.IsValid)
             {
@@ -103,7 +103,7 @@ namespace united_movers_api.Controllers
 
         // PUT: api/Employee/UpdateBackgroundVerification
         [HttpPut("UpdateBackgroundVerification")]
-        public async Task<IActionResult> UpdateEmployeeBackgroundVerificationDetails([FromBody] BackgroundVerification request)
+        public async Task<IActionResult> UpdateEmployeeBackgroundVerificationDetails([FromBody] EmployeeBackgroundVerification  request)
         {
             if (!ModelState.IsValid)
             {
@@ -121,7 +121,7 @@ namespace united_movers_api.Controllers
 
         // PUT: api/Employee/UpdateContactInformation
         [HttpPut("UpdateContactInformation")]
-        public async Task<IActionResult> UpdateEmployeeContactInformation([FromBody] ContactInformation contactInformation)
+        public async Task<IActionResult> UpdateEmployeeContactInformation([FromBody] EmployeeContactInformation contactInformation)
         {
             if (!ModelState.IsValid)
             {
@@ -140,7 +140,7 @@ namespace united_movers_api.Controllers
 
         // PUT: api/Employee/UpdateFinancialDetails
         [HttpPut("UpdateFinancialDetails")]
-        public async Task<IActionResult> UpdateEmployeeFinancialDetails([FromBody] FinancialDetails financialDetails)
+        public async Task<IActionResult> UpdateEmployeeFinancialDetails([FromBody]  EmployeeFinancialDetails financialDetails)
         {
             if (!ModelState.IsValid)
             {

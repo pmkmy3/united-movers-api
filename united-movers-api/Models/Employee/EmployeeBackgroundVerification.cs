@@ -1,6 +1,6 @@
 ﻿namespace united_movers_api.Models
 {
-    public class BackgroundVerification
+    public class EmployeeBackgroundVerification
     {
         public int EmployeeID { get; set; }
         public bool IsBackgroundVerificationCompleted { get; set; }

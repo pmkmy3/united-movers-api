@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Formats.Asn1;
 using System.Threading.Tasks;
 using united_movers_api.Models;
 using united_movers_api.Repositories.Implementations;
@@ -11,41 +12,63 @@ namespace united_movers_api.Services.Implementations
 {
     public class RiderService : IRiderService
     {
-        private readonly IRiderRepository _riderRepository;
+        private readonly IRiderRepository _RiderRepository;
 
-        public RiderService(IRiderRepository riderRepository)
+        public RiderService(IRiderRepository RiderRepository)
         {
-            _riderRepository = riderRepository;
-        }
-      
-         
-        public async Task<IEnumerable<Rider>> GetAllRidersAsync()
-        {
-            return await _riderRepository.GetAllRidersAsync();
+            _RiderRepository = RiderRepository;
         }
 
-        public async Task<Rider> GetRiderByIdAsync(int id)
+
+
+        public async Task<Rider> GetRiderByIdAsync(int RiderId)
         {
-            return await _riderRepository.GetRiderByIdAsync(id);
+            return await _RiderRepository.GetRiderByIdAsync(RiderId);
         }
 
-        public async Task<Rider> CreateRiderAsync(Rider rider)
-        {
-            return await _riderRepository.CreateRiderAsync(rider);
 
+
+        public async Task<bool> AddRiderAttachmentAsync(AddRiderAttachment RiderAttachment)
+        {
+            return await _RiderRepository.AddRiderAttachmentAsync(RiderAttachment);
         }
 
-        public async Task<Rider> UpdateRiderAsync(int id, Rider rider)
+        public async Task<bool> UpdateRiderBackgroundVerificationDetailsAsync(RiderBackgroundVerification backgroundVerification)
         {
-            return await _riderRepository.UpdateRiderAsync(id, rider);
+            return await _RiderRepository.UpdateRiderBackgroundVerificationDetailsAsync(backgroundVerification);
 
         }
 
-        public async Task<bool> DeleteRiderAsync(int id)
+        public async Task<bool> UpdateRiderContactInformationAsync(RiderContactInformation contactInformation)
         {
-             return await _riderRepository.DeleteRiderAsync(id);
+            return await _RiderRepository.UpdateRiderContactInformationAsync(contactInformation);
         }
 
-        
+        public async Task<bool> UpdateRiderFinancialDetailsAsync(RiderFinancialDetails financialDetails)
+        {
+            return await _RiderRepository.UpdateRiderFinancialDetailsAsync(financialDetails);
+        }
+
+        public async Task<CreateRiderResponse> ValidateAndCreateRiderIDAsync(ValidateAndCreateRiderIDRequest request)
+        {
+            return await _RiderRepository.ValidateAndCreateRiderIDAsync(request);
+        }
+
+        public async Task<bool> UpdateRiderPersonalInformation(ValidateAndCreateRiderIDRequest request)
+        {
+            return await _RiderRepository.UpdateRiderPersonalInformation(request);
+        }
+
+        public async Task<bool> ActivateOrDeactivateRiderAsync(ActivateOrDeactivateRiderRequest request)
+        {
+            return await _RiderRepository.ActivateOrDeactivateRiderAsync(request);
+        }
+
+        public async Task<IEnumerable<Rider>> GetAllActiveRidersAsync()
+        {
+            return await _RiderRepository.GetAllActiveRidersAsync();
+        }
+
+ 
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace united_movers_api.Models
 {
-    public class ContactInformation
+    public class EmployeeContactInformation
     {
         public int EmployeeID { get; set; }
         public string AddressLine1 { get; set; }

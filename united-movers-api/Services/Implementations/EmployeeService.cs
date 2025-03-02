@@ -27,33 +27,25 @@ namespace united_movers_api.Services.Implementations
             return await _employeeRepository.GetEmployeeByIdAsync(employeeId);
         }
 
-        public async Task<int> InsertEmployeeAsync(Employee employee)
-        {
-            return await _employeeRepository.InsertEmployeeAsync(employee);
-        }
-
-        public async Task<bool> UpdateEmployeeAsync(Employee employee)
-        {
-            return await _employeeRepository.UpdateEmployeeAsync(employee);
-        }
+    
 
         public async Task<bool> AddEmployeeAttachmentAsync( AddEmployeeAttachment employeeAttachment)
         {
             return await _employeeRepository.AddEmployeeAttachmentAsync(employeeAttachment);
         }
 
-        public async Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync(BackgroundVerification backgroundVerification)
+        public async Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync( EmployeeBackgroundVerification backgroundVerification)
         {
             return await _employeeRepository.UpdateEmployeeBackgroundVerificationDetailsAsync(backgroundVerification);    
         
         }
 
-        public async Task<bool> UpdateEmployeeContactInformationAsync(ContactInformation contactInformation)
+        public async Task<bool> UpdateEmployeeContactInformationAsync(EmployeeContactInformation contactInformation)
         {
             return await _employeeRepository.UpdateEmployeeContactInformationAsync(contactInformation);
         }
 
-        public async Task<bool> UpdateEmployeeFinancialDetailsAsync(FinancialDetails financialDetails)
+        public async Task<bool> UpdateEmployeeFinancialDetailsAsync( EmployeeFinancialDetails financialDetails)
         {
            return await _employeeRepository.UpdateEmployeeFinancialDetailsAsync (financialDetails);
         }
