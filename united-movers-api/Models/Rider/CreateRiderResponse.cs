@@ -2,7 +2,7 @@
 {
     public class CreateRiderResponse
     {
-        public int EmployeeID { get; set; }
+        public int RiderID { get; set; }
         public string Message { get; set; }
 
         public bool Proceedfurther { get; set; } 

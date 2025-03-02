@@ -4,10 +4,9 @@ namespace united_movers_api.Models
 {
     public class ActivateOrDeactivateRiderRequest
     {
-        public int EmployeeID { get; set; }
-        public bool ActivateEmployee { get; set; }
+        public int RiderID { get; set; }
+        public bool ActivateRider { get; set; }
         public string LoggedInUser { get; set; }
-        public string Comments { get; set; }
-        public string Password { get; set; }
+        public string Comments { get; set; } 
     }
 }

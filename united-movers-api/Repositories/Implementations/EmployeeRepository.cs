@@ -432,7 +432,7 @@ namespace united_movers_api.Repositories.Implementations
                     command.Parameters.Add(new SqlParameter("@PersonalEmailID", request.PersonalEmailID));
                     command.Parameters.Add(new SqlParameter("@LoggedInUserID", request.LoggedInUserID));
 
-                    _dbConnection.Open();
+                   
                     _dbConnection.Open();
                     await Task.Run(() => command.ExecuteNonQuery());
                     return true;

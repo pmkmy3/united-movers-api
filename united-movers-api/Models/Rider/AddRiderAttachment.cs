@@ -2,7 +2,7 @@
 {
     public class AddRiderAttachment 
     {
-        public int EmpID { get; set; }
+        public int RiderID { get; set; }
         public int AttachmentTypeID { get; set; }
         public int ReportTypeID { get; set; }
         public float NumberOfKB { get; set; }
