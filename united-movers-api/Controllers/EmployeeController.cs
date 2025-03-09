@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Configuration;
 using united_movers_api.Models;
 using united_movers_api.Services.Interfaces;
 
@@ -83,66 +84,99 @@ namespace united_movers_api.Controllers
         [HttpPut("UpdateContactInformation")]
         public async Task<IActionResult> UpdateEmployeeContactInformation([FromBody] EmployeeContactInformation contactInformation)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var result = await _employeeService.UpdateEmployeeContactInformationAsync(contactInformation);
+
+                if (!result)
+                {
+                    return BadRequest("Failed to update employee Contact Information details.");
+                }
+
+                return Ok(result);
             }
-
-            var result = await _employeeService.UpdateEmployeeContactInformationAsync(contactInformation);
-
-            if (!result)
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
-
-            return NoContent();
+            finally
+            {
+                // Clean up code
+            }
         }
 
         // PUT: api/Employee/UpdateFinancialDetails
         [HttpPut("UpdateFinancialDetails")]
         public async Task<IActionResult> UpdateEmployeeFinancialDetails([FromBody]  EmployeeFinancialDetails financialDetails)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var result = await _employeeService.UpdateEmployeeFinancialDetailsAsync(financialDetails);
+
+                if (!result)
+                {
+                    return BadRequest("Failed to update employee Contact Information details.");
+                }
+
+                return Ok(result);
             }
-
-            var result = await _employeeService.UpdateEmployeeFinancialDetailsAsync(financialDetails);
-
-            if (!result)
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
-
-            return NoContent();
+            finally
+            {
+                // Clean up code
+            }
         }
 
         [HttpPost("ValidateAndCreateEmployeeID")]
         public async Task<IActionResult> ValidateAndCreateEmployeeID([FromBody] ValidateAndCreateEmployeeIDRequest request)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
-            if (request.EmployeeID > 0)
-            {
-                var result = await _employeeService.UpdateEmployeePersonalInformation(request);
-                if (!result)
+                if (!ModelState.IsValid)
                 {
-                    return BadRequest("Failed to update EmployeeID");
+                    return BadRequest(ModelState);
                 }
-                return Ok("EmployeeID updated successfully");
-            }
-            else
-            {
-                var response = await _employeeService.ValidateAndCreateEmployeeIDAsync(request);
-
-                if (response == null)
+                if (request.EmployeeID > 0)
                 {
-                    return BadRequest("Failed to validate and create EmployeeID");
+                    var result = await _employeeService.UpdateEmployeePersonalInformation(request);
+                    if (!result)
+                    {
+                        return BadRequest("Failed to update EmployeeID");
+                    }
+                    return Ok(result);
                 }
+                else
+                {
+                    var response = await _employeeService.ValidateAndCreateEmployeeIDAsync(request);
 
-                return Ok(response);
+                    if (response == null)
+                    {
+                        return BadRequest("Failed to validate and create EmployeeID");
+                    }
+
+                    return Ok(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            finally
+            {
+                // Clean up code
             }
         }
 

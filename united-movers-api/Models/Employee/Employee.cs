@@ -13,9 +13,9 @@
         public string EmergencyContactNumber { get; set; }
         public string AadhaarNumber { get; set; }
         public string PanNumber { get; set; }
-        public string AccountNumber { get; set; }
+        public string BankAccountNumber { get; set; }
         public string BankName { get; set; }
-        public string IFSCCode { get; set; }
+        public string BankIFSCCode { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
