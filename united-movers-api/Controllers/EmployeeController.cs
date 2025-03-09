@@ -41,46 +41,6 @@ namespace united_movers_api.Controllers
             return Ok(employee);
         }
 
-
-
-
-        // POST: api/Employee
-        //[HttpPost]
-        //public async Task<IActionResult> InsertEmployee([FromBody] Employee employee)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    var employeeId = await _employeeService.InsertEmployeeAsync(employee);
-        //    return CreatedAtAction(nameof(GetEmployeeById), new { id = employeeId }, employee);
-        //}
-
-
-        //// PUT: api/Employee/{id}
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateEmployee(int id, [FromBody] Employee employee)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    if (id != employee.EmployeeID)
-        //    {
-        //        return BadRequest("Employee ID mismatch");
-        //    }
-
-        //    var result = await _employeeService.UpdateEmployeeAsync(employee);
-        //    if (!result)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return NoContent();
-        //}
-
         // POST: api/Employee/AddAttachment
         [HttpPost("AddAttachment")]
         public async Task<IActionResult> AddEmployeeAttachment([FromBody]  AddEmployeeAttachment request)
