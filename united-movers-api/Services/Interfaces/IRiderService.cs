@@ -1,11 +1,12 @@
 ﻿using united_movers_api.Models;
 
+
 namespace united_movers_api.Services.Interfaces
 {
     public interface IRiderService
     {
 
-        Task<IEnumerable<Rider>> GetAllActiveRidersAsync();
+        Task<IEnumerable<RiderShort>> GetAllRidersAsync();
         Task<Rider> GetRiderByIdAsync(int riderId);
         Task<bool> AddRiderAttachmentAsync(AddRiderAttachment riderAttachment);
         Task<bool> UpdateRiderBackgroundVerificationDetailsAsync(RiderBackgroundVerification backgroundVerification);

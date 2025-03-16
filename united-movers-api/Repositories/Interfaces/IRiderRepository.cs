@@ -5,7 +5,7 @@ namespace united_movers_api.Repositories.Interfaces
     public interface IRiderRepository
     {
 
-        Task<IEnumerable<Rider>> GetAllActiveRidersAsync();
+        Task<IEnumerable<RiderShort>> GetAllRidersAsync();
         Task<Rider> GetRiderByIdAsync(int riderId);
         Task<bool> AddRiderAttachmentAsync(AddRiderAttachment riderAttachment);
         Task<bool> UpdateRiderBackgroundVerificationDetailsAsync(RiderBackgroundVerification backgroundVerification);

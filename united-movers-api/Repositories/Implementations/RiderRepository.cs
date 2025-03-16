@@ -1,7 +1,5 @@
-﻿using Azure.Core;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Data.Common;
 using united_movers_api.Common;
 using united_movers_api.Models;
 using united_movers_api.Repositories.Interfaces;
@@ -17,9 +15,64 @@ namespace united_movers_api.Repositories.Implementations
             this._dbConnection = dbConnection;
         }
 
+        public async Task<IEnumerable<RiderShort>> GetAllRidersAsync()
+        {
+            try
+            {
+                using (var command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[spGetRiderById]";
+                    IDataParameter parameter = command.CreateParameter();
+                    parameter.ParameterName = "@RiderID";
+                    parameter.Value = -1;
+                    parameter.DbType = DbType.Int32;
+                    command.Parameters.Add(parameter);
 
-      
-       public async  Task<bool> AddRiderAttachmentAsync(AddRiderAttachment riderAttachment)
+                    _dbConnection.Open();
+                    using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
+                    {
+                        if (reader.Read())
+                        {
+                            List<RiderShort> riders = new List<RiderShort>();
+                            do
+                            {
+                                riders.Add(new RiderShort
+                                {
+                                    RiderID = reader.GetInt32(reader.GetOrdinal("RiderID")),
+                                    FullName = reader.IsDBNull(reader.GetOrdinal("FullName")) ? "" : reader.GetString(reader.GetOrdinal("FullName")),
+                                    AadharCardNumber = reader.IsDBNull(reader.GetOrdinal("AadharCardNumber")) ? "" : reader.GetString(reader.GetOrdinal("AadharCardNumber")),
+                                    PANNumber = reader.IsDBNull(reader.GetOrdinal("PANNumber")) ? "" : reader.GetString(reader.GetOrdinal("PANNumber")),
+                                    ContactNumber = reader.IsDBNull(reader.GetOrdinal("ContactNumber")) ? "" : reader.GetString(reader.GetOrdinal("ContactNumber")),
+                                    EmailID = reader.IsDBNull(reader.GetOrdinal("EmailID")) ? "" : reader.GetString(reader.GetOrdinal("EmailID")),
+                                    VendorName = reader.IsDBNull(reader.GetOrdinal("VendorName")) ? "" : reader.GetString(reader.GetOrdinal("VendorName"))
+                                });
+                            }
+                            while (reader.Read());
+                            return riders;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to get all the active riders", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+        }
+
+
+        public async  Task<bool> AddRiderAttachmentAsync(AddRiderAttachment riderAttachment)
         {
             try
             {
@@ -55,102 +108,7 @@ namespace united_movers_api.Repositories.Implementations
             }
         }
 
-        public async Task<IEnumerable<Rider>> GetAllActiveRidersAsync()
-        {
-            try
-            {
-                using (var command = _dbConnection.CreateCommand())
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "[dbo].[spGetRiderById]";
-                    IDataParameter parameter = command.CreateParameter();
-                    parameter.ParameterName = "@RiderID";
-                    parameter.Value = -1;
-                    parameter.DbType = DbType.Int32;
-                    command.Parameters.Add(parameter);
-
-                    _dbConnection.Open();
-                    using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
-                    {
-                        if (reader.Read())
-                        {
-                            List<Rider> riders = new List<Rider>();
-                            do
-                            {
-                                riders.Add(new Rider
-                                {
-                                    RiderID = reader.GetInt32(reader.GetOrdinal("RiderID")),
-                                    VendorID = reader.GetInt32(reader.GetOrdinal("VendorID")),
-                                    ReferenceName = reader.IsDBNull(reader.GetOrdinal("ReferenceName")) ? null : reader.GetString(reader.GetOrdinal("ReferenceName")),
-                                    FirstName = reader.IsDBNull(reader.GetOrdinal("FirstName")) ? null : reader.GetString(reader.GetOrdinal("FirstName")),
-                                    LastName = reader.IsDBNull(reader.GetOrdinal("LastName")) ? null : reader.GetString(reader.GetOrdinal("LastName")),
-                                    Gender = reader.IsDBNull(reader.GetOrdinal("Gender")) ? null : reader.GetString(reader.GetOrdinal("Gender")),
-                                    DateOfBirth = reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
-                                    AadharCardNumber = reader.IsDBNull(reader.GetOrdinal("AadharCardNumber")) ? null : reader.GetString(reader.GetOrdinal("AadharCardNumber")),
-                                    PANNumber = reader.IsDBNull(reader.GetOrdinal("PANNumber")) ? null : reader.GetString(reader.GetOrdinal("PANNumber")),
-                                    BloodGroup = reader.IsDBNull(reader.GetOrdinal("BloodGroup")) ? null : reader.GetString(reader.GetOrdinal("BloodGroup")),
-                                    ContactNumber = reader.IsDBNull(reader.GetOrdinal("ContactNumber")) ? null : reader.GetString(reader.GetOrdinal("ContactNumber")),
-                                    EmailID = reader.IsDBNull(reader.GetOrdinal("EmailID")) ? null : reader.GetString(reader.GetOrdinal("EmailID")),
-                                    AlternativeContactNumber = reader.IsDBNull(reader.GetOrdinal("AlternativeContactNumber")) ? null : reader.GetString(reader.GetOrdinal("AlternativeContactNumber")),
-                                    AlternativeEmail = reader.IsDBNull(reader.GetOrdinal("AlternativeEmail")) ? null : reader.GetString(reader.GetOrdinal("AlternativeEmail")),
-                                    EmergencyContactName = reader.IsDBNull(reader.GetOrdinal("EmergencyContactName")) ? null : reader.GetString(reader.GetOrdinal("EmergencyContactName")),
-                                    EmergencyContactRelation = reader.IsDBNull(reader.GetOrdinal("EmergencyContactRelation")) ? null : reader.GetString(reader.GetOrdinal("EmergencyContactRelation")),
-                                    EmergencyContactPersonID = reader.IsDBNull(reader.GetOrdinal("EmergencyContactPersonID")) ? null : reader.GetString(reader.GetOrdinal("EmergencyContactPersonID")),
-                                    EmergencyContactNumber = reader.IsDBNull(reader.GetOrdinal("EmergencyContactNumber")) ? null : reader.GetString(reader.GetOrdinal("EmergencyContactNumber")),
-                                    AddressLine1 = reader.IsDBNull(reader.GetOrdinal("AddressLine1")) ? null : reader.GetString(reader.GetOrdinal("AddressLine1")),
-                                    AddressLine2 = reader.IsDBNull(reader.GetOrdinal("AddressLine2")) ? null : reader.GetString(reader.GetOrdinal("AddressLine2")),
-                                    State = reader.IsDBNull(reader.GetOrdinal("State")) ? null : reader.GetString(reader.GetOrdinal("State")),
-                                    City = reader.IsDBNull(reader.GetOrdinal("City")) ? null : reader.GetString(reader.GetOrdinal("City")),
-                                    Zip = reader.IsDBNull(reader.GetOrdinal("Zip")) ? null : reader.GetString(reader.GetOrdinal("Zip")),
-                                    Landmark = reader.IsDBNull(reader.GetOrdinal("Landmark")) ? null : reader.GetString(reader.GetOrdinal("Landmark")),
-                                    HighestDegreeEarned = reader.IsDBNull(reader.GetOrdinal("HighestDegreeEarned")) ? null : reader.GetString(reader.GetOrdinal("HighestDegreeEarned")),
-                                    PreviousOrgName = reader.IsDBNull(reader.GetOrdinal("PreviousOrgName")) ? null : reader.GetString(reader.GetOrdinal("PreviousOrgName")),
-                                    AccountNumber = reader.IsDBNull(reader.GetOrdinal("AccountNumber")) ? null : reader.GetString(reader.GetOrdinal("AccountNumber")),
-                                    BankName = reader.IsDBNull(reader.GetOrdinal("BankName")) ? null : reader.GetString(reader.GetOrdinal("BankName")),
-                                    IFSCCode = reader.IsDBNull(reader.GetOrdinal("IFSCCode")) ? null : reader.GetString(reader.GetOrdinal("IFSCCode")),
-                                    UANNumber = reader.IsDBNull(reader.GetOrdinal("UANNumber")) ? null : reader.GetString(reader.GetOrdinal("UANNumber")),
-                                    InsurancePolicyNumber = reader.IsDBNull(reader.GetOrdinal("InsurancePolicyNumber")) ? null : reader.GetString(reader.GetOrdinal("InsurancePolicyNumber")),
-                                    InsurerName = reader.IsDBNull(reader.GetOrdinal("InsurerName")) ? null : reader.GetString(reader.GetOrdinal("InsurerName")),
-                                    InsuranceStartDate = reader.IsDBNull(reader.GetOrdinal("InsuranceStartDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("InsuranceStartDate")),
-                                    InsuranceEndDate = reader.IsDBNull(reader.GetOrdinal("InsuranceEndDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("InsuranceEndDate")),
-                                    FamilyMemberName = reader.IsDBNull(reader.GetOrdinal("FamilyMemberName")) ? null : reader.GetString(reader.GetOrdinal("FamilyMemberName")),
-                                    FamilyMemberRelation = reader.IsDBNull(reader.GetOrdinal("FamilyMemberRelation")) ? null : reader.GetString(reader.GetOrdinal("FamilyMemberRelation")),
-                                    FamilyMemberIDType = reader.IsDBNull(reader.GetOrdinal("FamilyMemberIDType")) ? null : reader.GetString(reader.GetOrdinal("FamilyMemberIDType")),
-                                    FamilyMemberID = reader.IsDBNull(reader.GetOrdinal("FamilyMemberID")) ? null : reader.GetString(reader.GetOrdinal("FamilyMemberID")),
-                                    FamilyMemberContact = reader.IsDBNull(reader.GetOrdinal("FamilyMemberContact")) ? null : reader.GetString(reader.GetOrdinal("FamilyMemberContact")),
-                                    IsBackgroundVerificationCompleted = reader.GetBoolean(reader.GetOrdinal("IsBackgroundVerificationCompleted")),
-                                    IsPhysicalVerificationCompleted = reader.GetBoolean(reader.GetOrdinal("IsPhysicalVerificationCompleted")),
-                                    BackgroundVerificationAgencyName = reader.IsDBNull(reader.GetOrdinal("BackgroundVerificationAgencyName")) ? null : reader.GetString(reader.GetOrdinal("BackgroundVerificationAgencyName")),
-                                    IsAadhaarVerified = reader.GetBoolean(reader.GetOrdinal("IsAadhaarVerified")),
-                                    IsContactNumberVerified = reader.GetBoolean(reader.GetOrdinal("IsContactNumberVerified")),
-                                    AdditionalNotes = reader.IsDBNull(reader.GetOrdinal("AdditionalNotes")) ? null : reader.GetString(reader.GetOrdinal("AdditionalNotes")),
-                                    CreatedByID = reader.GetInt32(reader.GetOrdinal("CreatedByID")),
-                                    CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"))
-                                });
-                            }
-                            while (reader.Read());
-                            return riders;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while trying to get all the active riders", ex);
-            }
-            finally
-            {
-                if (_dbConnection.State == ConnectionState.Open)
-                {
-                    _dbConnection.Close();
-                }
-            }
-        }
-
+        
         public async Task<Rider> GetRiderByIdAsync(int riderId)
         {
             try
@@ -167,55 +125,54 @@ namespace united_movers_api.Repositories.Implementations
                         if (reader.Read())
                         {
 #pragma warning disable CS8601 // Possible null reference assignment.
-                            return new Rider
+                            return new Rider //(!reader.IsDBNull(reader.GetOrdinal("DateOfBirth")))
                             {
-                                RiderID = reader.GetInt32(reader.GetOrdinal("RiderID")),
-                                VendorID = reader.GetInt32(reader.GetOrdinal("VendorID")),
-                                ReferenceName = reader.IsDBNull(reader.GetOrdinal("ReferenceName")) ? null : reader.GetString(reader.GetOrdinal("ReferenceName")),
-                                FirstName = reader.IsDBNull(reader.GetOrdinal("FirstName")) ? null : reader.GetString(reader.GetOrdinal("FirstName")),
-                                LastName = reader.IsDBNull(reader.GetOrdinal("LastName")) ? null : reader.GetString(reader.GetOrdinal("LastName")),
-                                Gender = reader.IsDBNull(reader.GetOrdinal("Gender")) ? null : reader.GetString(reader.GetOrdinal("Gender")),
-                                DateOfBirth = reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
-                                AadharCardNumber = reader.IsDBNull(reader.GetOrdinal("AadharCardNumber")) ? null : reader.GetString(reader.GetOrdinal("AadharCardNumber")),
-                                PANNumber = reader.IsDBNull(reader.GetOrdinal("PANNumber")) ? null : reader.GetString(reader.GetOrdinal("PANNumber")),
-                                BloodGroup = reader.IsDBNull(reader.GetOrdinal("BloodGroup")) ? null : reader.GetString(reader.GetOrdinal("BloodGroup")),
-                                ContactNumber = reader.IsDBNull(reader.GetOrdinal("ContactNumber")) ? null : reader.GetString(reader.GetOrdinal("ContactNumber")),
-                                EmailID = reader.IsDBNull(reader.GetOrdinal("EmailID")) ? null : reader.GetString(reader.GetOrdinal("EmailID")),
-                                AlternativeContactNumber = reader.IsDBNull(reader.GetOrdinal("AlternativeContactNumber")) ? null : reader.GetString(reader.GetOrdinal("AlternativeContactNumber")),
-                                AlternativeEmail = reader.IsDBNull(reader.GetOrdinal("AlternativeEmail")) ? null : reader.GetString(reader.GetOrdinal("AlternativeEmail")),
-                                EmergencyContactName = reader.IsDBNull(reader.GetOrdinal("EmergencyContactName")) ? null : reader.GetString(reader.GetOrdinal("EmergencyContactName")),
-                                EmergencyContactRelation = reader.IsDBNull(reader.GetOrdinal("EmergencyContactRelation")) ? null : reader.GetString(reader.GetOrdinal("EmergencyContactRelation")),
-                                EmergencyContactPersonID = reader.IsDBNull(reader.GetOrdinal("EmergencyContactPersonID")) ? null : reader.GetString(reader.GetOrdinal("EmergencyContactPersonID")),
-                                EmergencyContactNumber = reader.IsDBNull(reader.GetOrdinal("EmergencyContactNumber")) ? null : reader.GetString(reader.GetOrdinal("EmergencyContactNumber")),
-                                AddressLine1 = reader.IsDBNull(reader.GetOrdinal("AddressLine1")) ? null : reader.GetString(reader.GetOrdinal("AddressLine1")),
-                                AddressLine2 = reader.IsDBNull(reader.GetOrdinal("AddressLine2")) ? null : reader.GetString(reader.GetOrdinal("AddressLine2")),
-                                State = reader.IsDBNull(reader.GetOrdinal("State")) ? null : reader.GetString(reader.GetOrdinal("State")),
-                                City = reader.IsDBNull(reader.GetOrdinal("City")) ? null : reader.GetString(reader.GetOrdinal("City")),
-                                Zip = reader.IsDBNull(reader.GetOrdinal("Zip")) ? null : reader.GetString(reader.GetOrdinal("Zip")),
-                                Landmark = reader.IsDBNull(reader.GetOrdinal("Landmark")) ? null : reader.GetString(reader.GetOrdinal("Landmark")),
-                                HighestDegreeEarned = reader.IsDBNull(reader.GetOrdinal("HighestDegreeEarned")) ? null : reader.GetString(reader.GetOrdinal("HighestDegreeEarned")),
-                                PreviousOrgName = reader.IsDBNull(reader.GetOrdinal("PreviousOrgName")) ? null : reader.GetString(reader.GetOrdinal("PreviousOrgName")),
-                                AccountNumber = reader.IsDBNull(reader.GetOrdinal("AccountNumber")) ? null : reader.GetString(reader.GetOrdinal("AccountNumber")),
-                                BankName = reader.IsDBNull(reader.GetOrdinal("BankName")) ? null : reader.GetString(reader.GetOrdinal("BankName")),
-                                IFSCCode = reader.IsDBNull(reader.GetOrdinal("IFSCCode")) ? null : reader.GetString(reader.GetOrdinal("IFSCCode")),
-                                UANNumber = reader.IsDBNull(reader.GetOrdinal("UANNumber")) ? null : reader.GetString(reader.GetOrdinal("UANNumber")),
-                                InsurancePolicyNumber = reader.IsDBNull(reader.GetOrdinal("InsurancePolicyNumber")) ? null : reader.GetString(reader.GetOrdinal("InsurancePolicyNumber")),
-                                InsurerName = reader.IsDBNull(reader.GetOrdinal("InsurerName")) ? null : reader.GetString(reader.GetOrdinal("InsurerName")),
-                                InsuranceStartDate = reader.IsDBNull(reader.GetOrdinal("InsuranceStartDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("InsuranceStartDate")),
-                                InsuranceEndDate = reader.IsDBNull(reader.GetOrdinal("InsuranceEndDate")) ? (DateTime?)null : reader.GetDateTime(reader.GetOrdinal("InsuranceEndDate")),
-                                FamilyMemberName = reader.IsDBNull(reader.GetOrdinal("FamilyMemberName")) ? null : reader.GetString(reader.GetOrdinal("FamilyMemberName")),
-                                FamilyMemberRelation = reader.IsDBNull(reader.GetOrdinal("FamilyMemberRelation")) ? null : reader.GetString(reader.GetOrdinal("FamilyMemberRelation")),
-                                FamilyMemberIDType = reader.IsDBNull(reader.GetOrdinal("FamilyMemberIDType")) ? null : reader.GetString(reader.GetOrdinal("FamilyMemberIDType")),
-                                FamilyMemberID = reader.IsDBNull(reader.GetOrdinal("FamilyMemberID")) ? null : reader.GetString(reader.GetOrdinal("FamilyMemberID")),
-                                FamilyMemberContact = reader.IsDBNull(reader.GetOrdinal("FamilyMemberContact")) ? null : reader.GetString(reader.GetOrdinal("FamilyMemberContact")),
+                                RiderID = reader["RiderID"] != null ? reader.GetInt32(reader.GetOrdinal("RiderID")) : 0,
+                                VendorID = reader["VendorID"] != null ? reader.GetInt32(reader.GetOrdinal("VendorID")) : 0,
+                                ReferenceName = reader.IsDBNull(reader.GetOrdinal("ReferenceName")) ? "" : reader.GetString(reader.GetOrdinal("ReferenceName")),
+                                FullName = reader.IsDBNull(reader.GetOrdinal("FullName")) ? "" : reader.GetString(reader.GetOrdinal("FullName")),
+                                Gender = reader.IsDBNull(reader.GetOrdinal("Gender")) ? "" : reader.GetString(reader.GetOrdinal("Gender")),
+                                DateOfBirth = (!reader.IsDBNull(reader.GetOrdinal("DateOfBirth"))) ? Convert.ToDateTime(reader["DateOfBirth"]).ToCustomFormattedDate() : null,
+                                AadharCardNumber = reader.IsDBNull(reader.GetOrdinal("AadharCardNumber")) ? "" : reader.GetString(reader.GetOrdinal("AadharCardNumber")),
+                                PANNumber = reader.IsDBNull(reader.GetOrdinal("PANNumber")) ? "" : reader.GetString(reader.GetOrdinal("PANNumber")),
+                                BloodGroup = reader.IsDBNull(reader.GetOrdinal("BloodGroup")) ? "" : reader.GetString(reader.GetOrdinal("BloodGroup")),
+                                ContactNumber = reader.IsDBNull(reader.GetOrdinal("ContactNumber")) ? "" : reader.GetString(reader.GetOrdinal("ContactNumber")),
+                                EmailID = reader.IsDBNull(reader.GetOrdinal("EmailID")) ? "" : reader.GetString(reader.GetOrdinal("EmailID")),
+                                AlternativeContactNumber = reader.IsDBNull(reader.GetOrdinal("AlternativeContactNumber")) ? "" : reader.GetString(reader.GetOrdinal("AlternativeContactNumber")),
+                                AlternativeEmail = reader.IsDBNull(reader.GetOrdinal("AlternativeEmail")) ? "" : reader.GetString(reader.GetOrdinal("AlternativeEmail")),
+                                EmergencyContactName = reader.IsDBNull(reader.GetOrdinal("EmergencyContactName")) ? "" : reader.GetString(reader.GetOrdinal("EmergencyContactName")),
+                                EmergencyContactRelation = reader.IsDBNull(reader.GetOrdinal("EmergencyContactRelation")) ? "" : reader.GetString(reader.GetOrdinal("EmergencyContactRelation")),
+                                EmergencyContactPersonID = reader.IsDBNull(reader.GetOrdinal("EmergencyContactPersonID")) ? "" : reader.GetString(reader.GetOrdinal("EmergencyContactPersonID")),
+                                EmergencyContactNumber = reader.IsDBNull(reader.GetOrdinal("EmergencyContactNumber")) ? "" : reader.GetString(reader.GetOrdinal("EmergencyContactNumber")),
+                                AddressLine1 = reader.IsDBNull(reader.GetOrdinal("AddressLine1")) ? "" : reader.GetString(reader.GetOrdinal("AddressLine1")),
+                                AddressLine2 = reader.IsDBNull(reader.GetOrdinal("AddressLine2")) ? "" : reader.GetString(reader.GetOrdinal("AddressLine2")),
+                                State = reader.IsDBNull(reader.GetOrdinal("State")) ? "" : reader.GetString(reader.GetOrdinal("State")),
+                                City = reader.IsDBNull(reader.GetOrdinal("City")) ? "" : reader.GetString(reader.GetOrdinal("City")),
+                                Zip = reader.IsDBNull(reader.GetOrdinal("Zip")) ? "" : reader.GetString(reader.GetOrdinal("Zip")),
+                                Landmark = reader.IsDBNull(reader.GetOrdinal("Landmark")) ? "" : reader.GetString(reader.GetOrdinal("Landmark")),
+                                HighestDegreeEarned = reader.IsDBNull(reader.GetOrdinal("HighestDegreeEarned")) ? "" : reader.GetString(reader.GetOrdinal("HighestDegreeEarned")),
+                                PreviousOrgName = reader.IsDBNull(reader.GetOrdinal("PreviousOrgName")) ? "" : reader.GetString(reader.GetOrdinal("PreviousOrgName")),
+                                AccountNumber = reader.IsDBNull(reader.GetOrdinal("AccountNumber")) ? "" : reader.GetString(reader.GetOrdinal("AccountNumber")),
+                                BankName = reader.IsDBNull(reader.GetOrdinal("BankName")) ? "" : reader.GetString(reader.GetOrdinal("BankName")),
+                                IFSCCode = reader.IsDBNull(reader.GetOrdinal("IFSCCode")) ? "" : reader.GetString(reader.GetOrdinal("IFSCCode")),
+                                UANNumber = reader.IsDBNull(reader.GetOrdinal("UANNumber")) ? "" : reader.GetString(reader.GetOrdinal("UANNumber")),
+                                InsurancePolicyNumber = reader.IsDBNull(reader.GetOrdinal("InsurancePolicyNumber")) ? "" : reader.GetString(reader.GetOrdinal("InsurancePolicyNumber")),
+                                InsurerName = reader.IsDBNull(reader.GetOrdinal("InsurerName")) ? "" : reader.GetString(reader.GetOrdinal("InsurerName")),
+                                InsuranceStartDate = (!reader.IsDBNull(reader.GetOrdinal("InsuranceStartDate"))) ? Convert.ToDateTime(reader["InsuranceStartDate"]).ToCustomFormattedDate() : null,
+                                InsuranceEndDate = (!reader.IsDBNull(reader.GetOrdinal("InsuranceEndDate"))) ? Convert.ToDateTime(reader["InsuranceEndDate"]).ToCustomFormattedDate() : null,
+                                FamilyMemberName = reader.IsDBNull(reader.GetOrdinal("FamilyMemberName")) ? "" : reader.GetString(reader.GetOrdinal("FamilyMemberName")),
+                                FamilyMemberRelation = reader.IsDBNull(reader.GetOrdinal("FamilyMemberRelation")) ? "" : reader.GetString(reader.GetOrdinal("FamilyMemberRelation")),
+                                FamilyMemberIDType = reader.IsDBNull(reader.GetOrdinal("FamilyMemberIDType")) ? "" : reader.GetString(reader.GetOrdinal("FamilyMemberIDType")),
+                                FamilyMemberID = reader.IsDBNull(reader.GetOrdinal("FamilyMemberID")) ? "" : reader.GetString(reader.GetOrdinal("FamilyMemberID")),
+                                FamilyMemberContact = reader.IsDBNull(reader.GetOrdinal("FamilyMemberContact")) ? "" : reader.GetString(reader.GetOrdinal("FamilyMemberContact")),
                                 IsBackgroundVerificationCompleted = reader.GetBoolean(reader.GetOrdinal("IsBackgroundVerificationCompleted")),
                                 IsPhysicalVerificationCompleted = reader.GetBoolean(reader.GetOrdinal("IsPhysicalVerificationCompleted")),
-                                BackgroundVerificationAgencyName = reader.IsDBNull(reader.GetOrdinal("BackgroundVerificationAgencyName")) ? null : reader.GetString(reader.GetOrdinal("BackgroundVerificationAgencyName")),
+                                BackgroundVerificationAgencyName = reader.IsDBNull(reader.GetOrdinal("BackgroundVerificationAgencyName")) ? "" : reader.GetString(reader.GetOrdinal("BackgroundVerificationAgencyName")),
                                 IsAadhaarVerified = reader.GetBoolean(reader.GetOrdinal("IsAadhaarVerified")),
                                 IsContactNumberVerified = reader.GetBoolean(reader.GetOrdinal("IsContactNumberVerified")),
                                 AdditionalNotes = reader.IsDBNull(reader.GetOrdinal("AdditionalNotes")) ? null : reader.GetString(reader.GetOrdinal("AdditionalNotes")),
-                                CreatedByID = reader.GetInt32(reader.GetOrdinal("CreatedByID")),
-                                CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"))
+                                CreatedByID = reader["CreatedByID"] != null ? reader.GetInt32(reader.GetOrdinal("CreatedByID")) : 0,
+                                CreatedDate = (!reader.IsDBNull(reader.GetOrdinal("Createddate"))) ? Convert.ToDateTime(reader["Createddate"]).ToCustomFormattedDate() : null
                             };
 #pragma warning restore CS8601 // Possible null reference assignment.
                         }

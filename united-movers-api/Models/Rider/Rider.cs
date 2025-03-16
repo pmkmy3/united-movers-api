@@ -5,10 +5,9 @@
         public int RiderID { get; set; }
         public int VendorID { get; set; }
         public string ReferenceName { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string FullName { get; set; }
         public string Gender { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public string AadharCardNumber { get; set; }
         public string PANNumber { get; set; }
         public string BloodGroup { get; set; }
@@ -48,6 +47,6 @@
         public bool IsContactNumberVerified { get; set; }
         public string AdditionalNotes { get; set; }
         public int CreatedByID { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Configuration;
 using united_movers_api.Models;
@@ -22,10 +23,10 @@ namespace united_movers_api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var employees = await _employeeService.GetActiveEmployeesAsync();
+            var employees = await _employeeService.GetAllEmployeesAsync();
             if (employees == null)
             {
-                return NotFound();
+                return BadRequest("Failed to fetch all employees");
             }
             return Ok(employees);
         }

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using united_movers_api.Models;
 using united_movers_api.Services.Interfaces;
 
@@ -18,16 +17,16 @@ namespace united_movers_api.Controllers
             _riderService = riderService;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetAll()
-        //{
-        //    var Riders = await _riderService.GetActiveRidersAsync();
-        //    if (Riders == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Ok(Riders);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var Riders = await _riderService.GetAllRidersAsync();
+            if (Riders == null)
+            {
+                return BadRequest("Failed to fetch all RIders");
+            }
+            return Ok(Riders);
+        }
 
         // GET: api/Rider/{id}
         [HttpGet("{id}")]

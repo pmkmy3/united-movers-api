@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Formats.Asn1;
-using System.Threading.Tasks;
-using united_movers_api.Models;
-using united_movers_api.Repositories.Implementations;
+﻿using united_movers_api.Models;
 using united_movers_api.Repositories.Interfaces;
 using united_movers_api.Services.Interfaces;
 
@@ -19,7 +13,10 @@ namespace united_movers_api.Services.Implementations
             _RiderRepository = RiderRepository;
         }
 
-
+        public async Task<IEnumerable<RiderShort>> GetAllRidersAsync()
+        {
+            return await _RiderRepository.GetAllRidersAsync();
+        }
 
         public async Task<Rider> GetRiderByIdAsync(int RiderId)
         {
@@ -63,12 +60,6 @@ namespace united_movers_api.Services.Implementations
         {
             return await _RiderRepository.ActivateOrDeactivateRiderAsync(request);
         }
-
-        public async Task<IEnumerable<Rider>> GetAllActiveRidersAsync()
-        {
-            return await _RiderRepository.GetAllActiveRidersAsync();
-        }
-
- 
+         
     }
 }
