@@ -2,9 +2,9 @@
 {
     public class ValidateAndCreateRiderIDRequest
     {
-        public string VendorName { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public int VendorID { get; set; }
+        public string FullName { get; set; }
+      //  public string LastName { get; set; }
         public string Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string AadhaarNumber { get; set; }

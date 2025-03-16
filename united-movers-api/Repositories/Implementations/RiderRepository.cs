@@ -283,7 +283,7 @@ namespace united_movers_api.Repositories.Implementations
                     command.CommandText = "[dbo].[UpdateRiderContactInformation]";
 
 
-                    command.Parameters.Add(new SqlParameter("@EmployeeID", contactInformation.RiderID));
+                    command.Parameters.Add(new SqlParameter("@RiderID", contactInformation.RiderID));
                     command.Parameters.Add(new SqlParameter("@AddressLine1", contactInformation.AddressLine1 ?? (object)DBNull.Value));
                     command.Parameters.Add(new SqlParameter("@AddressLine2", contactInformation.AddressLine2 ?? (object)DBNull.Value));
                     command.Parameters.Add(new SqlParameter("@AlternativeContactNumber", contactInformation.AlternativeContactNumber ?? (object)DBNull.Value));
@@ -329,7 +329,7 @@ namespace united_movers_api.Repositories.Implementations
                     command.CommandText = "[dbo].[UpdateRiderFinancialDetails]";
 
 
-                    command.Parameters.Add(new SqlParameter("@EmployeeID", financialDetails.EmployeeID));
+                    command.Parameters.Add(new SqlParameter("@RiderID", financialDetails.RiderID));
                     command.Parameters.Add(new SqlParameter("@BankAccountNumber", financialDetails.BankAccountNumber ?? (object)DBNull.Value));
                     command.Parameters.Add(new SqlParameter("@BankName", financialDetails.BankName ?? (object)DBNull.Value));
                     command.Parameters.Add(new SqlParameter("@BankIFSCCode", financialDetails.BankIFSCCode ?? (object)DBNull.Value));
@@ -368,8 +368,7 @@ namespace united_movers_api.Repositories.Implementations
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[UpdateRiderPersonalInformation]";
                     command.Parameters.Add(new SqlParameter("@EmployeeID", request.RiderID));
-                    command.Parameters.Add(new SqlParameter("@FirstName", request.FirstName));
-                    command.Parameters.Add(new SqlParameter("@LastName", request.LastName));
+                    command.Parameters.Add(new SqlParameter("@FirstName", request.FullName));
                     command.Parameters.Add(new SqlParameter("@Gender", request.Gender));
                     command.Parameters.Add(new SqlParameter("@DateOfBirth", request.DateOfBirth));
                     command.Parameters.Add(new SqlParameter("@AadhaarNumber", request.AadhaarNumber));
@@ -410,9 +409,8 @@ namespace united_movers_api.Repositories.Implementations
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[ValidateAndCreateRiderID]";
-
-                    command.Parameters.Add(new SqlParameter("@FirstName", request.FirstName));
-                    command.Parameters.Add(new SqlParameter("@LastName", request.LastName));
+                    command.Parameters.Add(new SqlParameter("@VendorID", request.VendorID));
+                    command.Parameters.Add(new SqlParameter("@FullName", request.FullName)); 
                     command.Parameters.Add(new SqlParameter("@Gender", request.Gender));
                     command.Parameters.Add(new SqlParameter("@DateOfBirth", request.DateOfBirth));
                     command.Parameters.Add(new SqlParameter("@AadhaarNumber", request.AadhaarNumber));
