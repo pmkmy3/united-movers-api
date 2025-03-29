@@ -5,7 +5,7 @@ namespace united_movers_api.Repositories.Interfaces
 {
     public interface IEmployeeRepository
     {
-        Task<IEnumerable<Employee>> GetAllActiveEmployeesAsync();
+        Task<IEnumerable<EmployeeShort>> GetAllActiveEmployeesAsync();
 
         Task<Employee> GetEmployeeByIdAsync(int employeeId);
 

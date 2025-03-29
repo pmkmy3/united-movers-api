@@ -7,6 +7,9 @@ namespace united_movers_api.Services.Interfaces
     {
 
         Task<IEnumerable<RiderShort>> GetAllRidersAsync();
+
+        Task<IEnumerable<Vendor>> GetAllVendorsAsync();
+
         Task<Rider> GetRiderByIdAsync(int riderId);
         Task<bool> AddRiderAttachmentAsync(AddRiderAttachment riderAttachment);
         Task<bool> UpdateRiderBackgroundVerificationDetailsAsync(RiderBackgroundVerification backgroundVerification);

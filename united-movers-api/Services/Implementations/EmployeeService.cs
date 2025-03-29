@@ -17,7 +17,7 @@ namespace united_movers_api.Services.Implementations
         }
 
 
-        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
+        public async Task<IEnumerable<EmployeeShort>> GetAllEmployeesAsync()
         {
             return await _employeeRepository.GetAllActiveEmployeesAsync();
         }

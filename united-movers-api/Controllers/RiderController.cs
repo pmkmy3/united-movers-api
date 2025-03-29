@@ -28,6 +28,18 @@ namespace united_movers_api.Controllers
             return Ok(Riders);
         }
 
+        // GET: api/Rider/Vendor
+        [HttpGet("Vendor")]
+        public async Task<IActionResult> GetAllVendors()
+        {
+            var vendors = await _riderService.GetAllVendorsAsync();
+            if (vendors == null)
+            {
+                return BadRequest("Failed to fetch all vendors");
+            }
+            return Ok(vendors);
+        }
+
         // GET: api/Rider/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRiderById(int id)

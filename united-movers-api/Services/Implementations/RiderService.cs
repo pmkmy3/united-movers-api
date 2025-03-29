@@ -18,6 +18,11 @@ namespace united_movers_api.Services.Implementations
             return await _RiderRepository.GetAllRidersAsync();
         }
 
+        public Task<IEnumerable<Vendor>> GetAllVendorsAsync()
+        {
+            return _RiderRepository.GetAllVendorsAsync();
+        }
+
         public async Task<Rider> GetRiderByIdAsync(int RiderId)
         {
             return await _RiderRepository.GetRiderByIdAsync(RiderId);

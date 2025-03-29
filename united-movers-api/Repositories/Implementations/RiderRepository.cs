@@ -71,6 +71,56 @@ namespace united_movers_api.Repositories.Implementations
             }
         }
 
+        public async Task<IEnumerable<Vendor>> GetAllVendorsAsync()
+        {
+            try
+            {
+                using (var command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[GetRegistredVendors]";
+
+                    _dbConnection.Open();
+                    using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
+                    {
+                        if (reader.Read())
+                        {
+                            List<Vendor> vendors = new List<Vendor>();
+                            do
+                            {
+                                vendors.Add(new Vendor
+                                {
+                                    ID = reader.GetInt32(reader.GetOrdinal("ID")),
+                                    Name = reader.IsDBNull(reader.GetOrdinal("Name")) ? "" : reader.GetString(reader.GetOrdinal("Name")),
+                                    Address = reader.IsDBNull(reader.GetOrdinal("Address")) ? "" : reader.GetString(reader.GetOrdinal("Address")),
+                                    Email = reader.IsDBNull(reader.GetOrdinal("EmailID")) ? "" : reader.GetString(reader.GetOrdinal("EmailID")),
+                                    ContactNumber = reader.IsDBNull(reader.GetOrdinal("ContactNumber")) ? "" : reader.GetString(reader.GetOrdinal("ContactNumber")),
+                                    IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
+                                });
+                            }
+                            while (reader.Read());
+                            return vendors;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to get all the active vendors", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+        }
 
         public async  Task<bool> AddRiderAttachmentAsync(AddRiderAttachment riderAttachment)
         {

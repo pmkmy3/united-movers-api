@@ -17,7 +17,7 @@ namespace united_movers_api.Repositories.Implementations
             this._dbConnection = dbConnection;
         }
 
-        public async Task<IEnumerable<Employee>> GetAllActiveEmployeesAsync()
+        public async Task<IEnumerable<EmployeeShort>> GetAllActiveEmployeesAsync()
         {
             try
             {
@@ -36,51 +36,19 @@ namespace united_movers_api.Repositories.Implementations
                     {
                         if (reader.Read())
                         {
-                            List<Employee> employees = new List<Employee>();
+                            List<EmployeeShort> employees = new List<EmployeeShort>();
                             do
                             {
 #pragma warning disable CS8601 // Possible null reference assignment.
-                                employees.Add(new Employee
+                                employees.Add(new EmployeeShort
                                 {
                                     EmployeeID = Convert.ToInt32(reader["EmployeeID"]),
                                     FirstName = reader["FirstName"]?.ToString(),
                                     LastName = reader["LastName"]?.ToString(),
-                                    BloodGroup = reader["BloodGroup"]?.ToString(),
-                                    Gender = reader["Gender"]?.ToString(),
                                     PersonalEmailID = reader["PersonalEmailID"]?.ToString(),
                                     ContactNumber = reader["ContactNumber"]?.ToString(),
-                                    AlternativeContactNumber = reader["AlternativeContactNumber"]?.ToString(),
-                                    EmergencyContactNumber = reader["EmergencyContactNumber"]?.ToString(),
                                     AadhaarNumber = reader["AadhaarNumber"]?.ToString(),
-                                    PanNumber = reader["PanNumber"]?.ToString(),
-                                    BankAccountNumber = reader["AccountNumber"]?.ToString(),
-                                    BankName = reader["BankName"]?.ToString(),
-                                    BankIFSCCode = reader["IFSCCode"]?.ToString(),
-                                    DateOfBirth = (!reader.IsDBNull(reader.GetOrdinal("DateOfBirth"))) ? Convert.ToDateTime(reader["DateOfBirth"]).ToCustomFormattedDate() : null,
-                                    CreatedDate = (!reader.IsDBNull(reader.GetOrdinal("CreatedDate"))) ? Convert.ToDateTime(reader["CreatedDate"]).ToCustomFormattedDate() : null,
-                                    ModifiedDate = (!reader.IsDBNull(reader.GetOrdinal("ModifiedDate"))) ? Convert.ToDateTime(reader["ModifiedDate"]).ToCustomFormattedDate() : null,
-                                    CreatedByID = (!reader.IsDBNull(reader.GetOrdinal("CreatedByID"))) ? Convert.ToInt32(reader["CreatedByID"]) : -1,
-                                    ModifiedByID = (!reader.IsDBNull(reader.GetOrdinal("ModifiedByID"))) ? Convert.ToInt32(reader["ModifiedByID"]) : -1,
-                                    AlternativeEmail = reader["AlternativeEmail"]?.ToString(),
-                                    EmergencyContactName = reader["EmergencyContactName"]?.ToString(),
-                                    EmergencyContactRelation = reader["EmergencyContactRelation"]?.ToString(),
-                                    EmergencyContactPersonID = reader["EmergencyContactPersonID"]?.ToString(),
-                                    AddressLine1 = reader["AddressLine1"]?.ToString(),
-                                    AddressLine2 = reader["AddressLine2"]?.ToString(),
-                                    State = reader["State"]?.ToString(),
-                                    City = reader["City"]?.ToString(),
-                                    Zip = reader["Zip"]?.ToString(),
-                                    Landmark = reader["Landmark"]?.ToString(),
-                                    HighestDegreeEarned = reader["HighestDegreeEarned"]?.ToString(),
-                                    PreviousOrgName = reader["PreviousOrgName"]?.ToString(),
-                                    UANNumber = reader["UANNumber"]?.ToString(),
-                                    InsurancePolicyNumber = reader["InsurancePolicyNumber"]?.ToString(),
-                                    InsurerName = reader["InsurerName"]?.ToString(),
-                                    InsuranceStartDate = (!reader.IsDBNull(reader.GetOrdinal("InsuranceStartDate"))) ? Convert.ToDateTime(reader["InsuranceStartDate"]).ToCustomFormattedDate() : null,
-                                    InsuranceEndDate = (!reader.IsDBNull(reader.GetOrdinal("InsuranceEndDate"))) ? Convert.ToDateTime(reader["InsuranceEndDate"]).ToCustomFormattedDate() : null,
-                                    IsBackgroundVerificationCompleted = (!reader.IsDBNull(reader.GetOrdinal("IsBackgroundVerficationCompleted"))) ? Convert.ToBoolean(reader["IsBackgroundVerficationCompleted"]) : false,
-                                    IsPhysicalVerificationCompleted = (!reader.IsDBNull(reader.GetOrdinal("IsPhysicalVerificationCompleted"))) ? Convert.ToBoolean(reader["IsPhysicalVerificationCompleted"]) : false,
-                                    BackgroundVerificationAgencyName = reader["BackgroundVerificationAgencyName"]?.ToString()
+                                    PanNumber = reader["PanNumber"]?.ToString()
                                 });
 #pragma warning restore CS8601 // Possible null reference assignment.
                             }

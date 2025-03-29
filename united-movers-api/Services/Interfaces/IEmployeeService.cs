@@ -4,7 +4,7 @@ namespace united_movers_api.Services.Interfaces
 {
     public interface IEmployeeService
     {
-        Task<IEnumerable<Employee>> GetAllEmployeesAsync();
+        Task<IEnumerable<EmployeeShort>> GetAllEmployeesAsync();
 
         Task<Employee> GetEmployeeByIdAsync(int employeeId);
 
