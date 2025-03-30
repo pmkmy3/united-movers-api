@@ -257,7 +257,7 @@ namespace united_movers_api.Repositories.Implementations
                     command.Parameters.Add(new SqlParameter("@DocumentTypeID", riderAttachment.AttachmentTypeID));
                     command.Parameters.Add(new SqlParameter("@NumberOfKB", riderAttachment.NumberOfKB));
                     command.Parameters.Add(new SqlParameter("@ContentType", riderAttachment.ContentType));
-                    command.Parameters.Add(new SqlParameter("@Resource", riderAttachment.Content));
+                    command.Parameters.Add(new SqlParameter("@Content", riderAttachment.Content));
                     command.Parameters.Add(new SqlParameter("@LoggedInUserID", riderAttachment.LoggedInUserID));
                     _dbConnection.Open();
                     await Task.Run(() => command.ExecuteNonQuery());
