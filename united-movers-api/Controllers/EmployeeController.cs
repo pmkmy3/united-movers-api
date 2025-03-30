@@ -43,6 +43,8 @@ namespace united_movers_api.Controllers
             return Ok(employee);
         }
 
+
+
         [HttpGet("GetAttachments/{emplID}")]
         public async Task<IEnumerable<EmployeeAttachment>> GetEmployeeAttachmentsByEmplID(int emplID)
         {
@@ -53,6 +55,13 @@ namespace united_movers_api.Controllers
             }
 
             return (IEnumerable<EmployeeAttachment>)Ok(employeeAttachments);
+        }
+
+        [HttpGet("GetAttachmentContent/{attachmentID}")]
+        public async Task<EmployeeAttachment> GetAttachmentContentByAttachmentID(Guid attachmentID)
+        {
+            var AttchmentWithContent = await _employeeService.GetAttachmentContentByAttachmentID(attachmentID);
+            return AttchmentWithContent;
         }
 
         // POST: api/Employee/AddAttachment

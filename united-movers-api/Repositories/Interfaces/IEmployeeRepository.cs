@@ -13,6 +13,7 @@ namespace united_movers_api.Repositories.Interfaces
 
         //Task<bool> UpdateEmployeeAsync(Employee employee);
 
+        Task<EmployeeAttachment> GetAttachmentContentByAttachmentIDAsync(Guid attachmentID);
         Task<bool> AddEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment );
 
         Task<bool> DeleteEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment);

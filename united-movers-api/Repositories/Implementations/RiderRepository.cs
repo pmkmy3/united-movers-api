@@ -122,6 +122,51 @@ namespace united_movers_api.Repositories.Implementations
             }
         }
 
+        public async Task<RiderAttachment> GetAttachmentContentByAttachmentIDAsync(Guid attachmentID)
+        {
+            try
+            {
+                using (var command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[sp_GetAttachmentContentByAttachmentID]";
+                    command.Parameters.Add(new SqlParameter("@AttachmentID", attachmentID));
+
+                    _dbConnection.Open();
+                    using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
+                    {
+                        if (reader.Read())
+                        {
+                            return new RiderAttachment
+                            {
+                                AttachmentID = attachmentID,
+                                NumberOfKB = reader.GetFloat(reader.GetOrdinal("NumberOfKB")),
+                                ContentType = reader.GetString(reader.GetOrdinal("ContentType")),
+                                Content = (byte[])reader["Content"]
+                            };
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to get the attachment content by ID", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+        }
+
+
+      
         public async Task<bool> DeleteRiderAttachmentAsync(RiderAttachment riderAttachment)
         {
             try

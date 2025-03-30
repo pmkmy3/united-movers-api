@@ -23,6 +23,11 @@ namespace united_movers_api.Services.Implementations
             return _RiderRepository.GetAllVendorsAsync();
         }
 
+       public Task<RiderAttachment> GetAttachmentContentByAttachmentID(Guid attachmentID)
+        {
+            return _RiderRepository.GetAttachmentContentByAttachmentIDAsync(attachmentID);
+        }
+
         public async Task<Rider> GetRiderByIdAsync(int RiderId)
         {
             return await _RiderRepository.GetRiderByIdAsync(RiderId);

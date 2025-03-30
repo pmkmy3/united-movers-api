@@ -12,7 +12,7 @@ namespace united_movers_api.Services.Interfaces
 
         Task<Rider> GetRiderByIdAsync(int riderId);
         Task<bool> AddRiderAttachmentAsync(RiderAttachment riderAttachment);
-
+        Task<RiderAttachment> GetAttachmentContentByAttachmentID(Guid attachmentID);
         Task<bool> DeleteRiderAttachmentAsync(RiderAttachment riderAttachment);
         Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByRiderID(int riderID);
         Task<bool> UpdateRiderBackgroundVerificationDetailsAsync(RiderBackgroundVerification backgroundVerification);

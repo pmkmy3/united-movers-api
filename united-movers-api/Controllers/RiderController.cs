@@ -53,9 +53,14 @@ namespace united_movers_api.Controllers
         }
 
 
+        [HttpGet("GetAttachmentContent/{attachmentID}")]
+        public async Task<RiderAttachment> GetAttachmentContentByAttachmentID(Guid attachmentID)
+        {
+            var AttchmentWithContent = await _riderService.GetAttachmentContentByAttachmentID(attachmentID);
+            return AttchmentWithContent;
+        }
 
 
-       
         // POST: api/Rider/AddAttachment
         [HttpPost("AddAttachment")]
         public async Task<IActionResult> AddRiderAttachment([FromBody] RiderAttachment request)
