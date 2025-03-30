@@ -307,7 +307,11 @@ namespace united_movers_api.Repositories.Implementations
                                     AttachmentType = reader["DocumentType"]?.ToString(),
                                     AttachmentID = Guid.Parse(reader["AttachmentID"].ToString()),
                                     AttachmentName = reader["AttachmentName"]?.ToString(),
+                                    AttachmentTypeID = Convert.ToInt32(reader["DocumentTypeID"]),
+                                    NumberOfKB = reader["NumberOfKB"]?.ToString(),
                                     RiderID = riderID
+                                                                      
+                                   
                                 });
 
                             }
