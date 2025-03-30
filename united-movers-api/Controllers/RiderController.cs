@@ -61,15 +61,15 @@ namespace united_movers_api.Controllers
         }
 
         [HttpGet("GetRiderDocumentTypes")]
-        public async Task<IEnumerable<DocumentTypes>> GetRiderDocumentTypes()
+        public async Task<IActionResult> GetRiderDocumentTypes()
         {
             var riderDocumentTypes = await _riderService.GetRiderDocumentTypesAsync();
             if (riderDocumentTypes == null)
             {
-                return (IEnumerable<DocumentTypes>)NotFound();
+                return NotFound();
             }
 
-            return (IEnumerable<DocumentTypes>)Ok(riderDocumentTypes);
+            return  Ok(riderDocumentTypes);
         }
 
         // POST: api/Rider/AddAttachment
