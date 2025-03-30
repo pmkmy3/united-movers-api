@@ -93,7 +93,7 @@ namespace united_movers_api.Controllers
             return Ok("Attachment added successfully");
         }
 
-        [HttpGet("GetAttachments/{id}")]
+        [HttpGet("GetAttachments/{riderID}")]
         public async Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByRiderID(int riderID)
         {
             var riderAttachments = await _riderService.GetRiderAttachmentsByRiderID(riderID);

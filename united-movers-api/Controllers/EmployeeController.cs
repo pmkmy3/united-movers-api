@@ -43,7 +43,7 @@ namespace united_movers_api.Controllers
             return Ok(employee);
         }
 
-        [HttpGet("GetAttachments/{id}")]
+        [HttpGet("GetAttachments/{emplID}")]
         public async Task<IEnumerable<EmployeeAttachment>> GetEmployeeAttachmentsByEmplID(int emplID)
         {
             var employeeAttachments = await _employeeService.GetEmployeeAttachmentsByEmplIDasync(emplID);
