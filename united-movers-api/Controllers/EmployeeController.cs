@@ -46,15 +46,15 @@ namespace united_movers_api.Controllers
 
 
         [HttpGet("GetAttachments/{emplID}")]
-        public async Task<IEnumerable<EmployeeAttachment>> GetEmployeeAttachmentsByEmplID(int emplID)
+        public async Task<IActionResult> GetEmployeeAttachmentsByEmplID(int emplID)
         {
             var employeeAttachments = await _employeeService.GetEmployeeAttachmentsByEmplIDasync(emplID);
             if (employeeAttachments == null)
             {
-                return (IEnumerable<EmployeeAttachment>)NotFound();
+                return BadRequest("Failed to fetch all employee attachments");
             }
 
-            return (IEnumerable<EmployeeAttachment>)Ok(employeeAttachments);
+            return Ok(employeeAttachments);
         }
 
         [HttpGet("GetAttachmentContent/{attachmentID}")]
@@ -65,19 +65,18 @@ namespace united_movers_api.Controllers
         }
 
         [HttpGet("GetEmployeeDocumentTypes")]
-        public async Task<IEnumerable<DocumentTypes>> GetEmployeeDocumentTypes()
+        public async Task<IActionResult> GetEmployeeDocumentTypes()
         {
             var employeeDocumentTypes = await _employeeService.GetEmployeeDocumentTypesAsync();
             if (employeeDocumentTypes == null)
             {
-                return (IEnumerable<DocumentTypes>)NotFound();
+                return BadRequest("Failed to fetch all employee document types");
             }
-
-            return (IEnumerable<DocumentTypes>)Ok(employeeDocumentTypes);
+            return Ok(employeeDocumentTypes);
         }
 
         // POST: api/Employee/AddAttachment
-        [HttpPost("AddAttachment")]
+        [HttpPut("AddAttachment")]
         public async Task<IActionResult> AddEmployeeAttachment([FromBody] EmployeeAttachment request)
         {
             if (!ModelState.IsValid)
@@ -92,10 +91,10 @@ namespace united_movers_api.Controllers
                 return BadRequest("Failed to add attachment");
             }
 
-            return Ok("Attachment added successfully");
+            return Ok(result);
         }
 
-        [HttpPost("DeleteAttachment")]
+        [HttpDelete("DeleteAttachment")]
         public async Task<IActionResult> DeleteEmployeeAttachment([FromBody] EmployeeAttachment request)
         {
             if (!ModelState.IsValid)
@@ -110,7 +109,7 @@ namespace united_movers_api.Controllers
                 return BadRequest("Failed to add attachment");
             }
 
-            return Ok("Attachment added successfully");
+            return Ok(result);
         }
 
 

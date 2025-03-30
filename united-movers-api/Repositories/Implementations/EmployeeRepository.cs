@@ -166,7 +166,7 @@ namespace united_movers_api.Repositories.Implementations
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[Sp_DeleteEmployeeAttachments]";
 
-                    command.Parameters.Add(new SqlParameter("@EmplID", employeeAttachment.EmpID));
+                    command.Parameters.Add(new SqlParameter("@EmplID", employeeAttachment.EmployeeID));
                     command.Parameters.Add(new SqlParameter("@AttachmentID", employeeAttachment.AttachmentID));
                     _dbConnection.Open();
                     await Task.Run(() => command.ExecuteNonQuery());
@@ -194,7 +194,7 @@ namespace united_movers_api.Repositories.Implementations
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[Sp_SaveEmployeeAttachments]";
 
-                    command.Parameters.Add(new SqlParameter("@EmpID", employeeAttachment.EmpID));
+                    command.Parameters.Add(new SqlParameter("@EmpID", employeeAttachment.EmployeeID));
                     command.Parameters.Add(new SqlParameter("@AttachmentName", employeeAttachment.AttachmentName));
                     command.Parameters.Add(new SqlParameter("@DocumentTypeID", employeeAttachment.AttachmentTypeID));
                     command.Parameters.Add(new SqlParameter("@NumberOfKB", employeeAttachment.NumberOfKB));
@@ -237,9 +237,9 @@ namespace united_movers_api.Repositories.Implementations
                     _dbConnection.Open();
                     using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
                     {
+                        List<EmployeeAttachment> attachments = new List<EmployeeAttachment>();
                         if (reader.Read())
-                        {
-                            List<EmployeeAttachment> attachments = new List<EmployeeAttachment>();
+                        {   
                             do
                             {
                                 attachments.Add(new EmployeeAttachment
@@ -249,7 +249,7 @@ namespace united_movers_api.Repositories.Implementations
                                     AttachmentType = reader["DocumentType"]?.ToString(),
                                     AttachmentID = Guid.Parse(reader["AttachmentID"].ToString()),
                                     AttachmentName = reader["AttachmentName"]?.ToString(),
-                                    EmpID = emplID
+                                    EmployeeID = emplID
                                 });
 
                             }
@@ -258,7 +258,7 @@ namespace united_movers_api.Repositories.Implementations
                         }
                         else
                         {
-                            return null;
+                            return attachments;
                         }
                     }
                 }
@@ -296,7 +296,7 @@ namespace united_movers_api.Repositories.Implementations
                                 AttachmentID = attachmentID,
                                 NumberOfKB = reader.GetFloat(reader.GetOrdinal("NumberOfKB")),
                                 ContentType = reader.GetString(reader.GetOrdinal("ContentType")),
-                                Content = (byte[])reader["Content"]
+                                Content = reader.GetString(reader.GetOrdinal("Content"))
                             };
                         }
                         else
