@@ -122,24 +122,51 @@ namespace united_movers_api.Repositories.Implementations
             }
         }
 
-        public async  Task<bool> AddRiderAttachmentAsync(AddRiderAttachment riderAttachment)
+        public async Task<bool> DeleteRiderAttachmentAsync(RiderAttachment riderAttachment)
         {
             try
             {
                 using (IDbCommand command = _dbConnection.CreateCommand())
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "[dbo].[AddRiderAttachment]";
-
+                    command.CommandText = "[dbo].[Sp_DeleteRiderAttachments]";
 
                     command.Parameters.Add(new SqlParameter("@RiderID", riderAttachment.RiderID));
-                    command.Parameters.Add(new SqlParameter("@AttachmentTypeID", riderAttachment.AttachmentTypeID));
-                    command.Parameters.Add(new SqlParameter("@ReportTypeID", riderAttachment.ReportTypeID));
+                    command.Parameters.Add(new SqlParameter("@AttachmentID", riderAttachment.AttachmentID)); 
+                    _dbConnection.Open();
+                    await Task.Run(() => command.ExecuteNonQuery());
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to delete the Attachment ", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+        }
+
+        public async Task<bool> AddRiderAttachmentAsync(RiderAttachment riderAttachment)
+        {
+            try
+            {
+                using (IDbCommand command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[Sp_SaveRiderAttachments]";
+
+                    command.Parameters.Add(new SqlParameter("@RiderID", riderAttachment.RiderID));
+                    command.Parameters.Add(new SqlParameter("@AttachmentName", riderAttachment.AttachmentName));
+                    command.Parameters.Add(new SqlParameter("@DocumentTypeID", riderAttachment.AttachmentTypeID));
                     command.Parameters.Add(new SqlParameter("@NumberOfKB", riderAttachment.NumberOfKB));
-                    command.Parameters.Add(new SqlParameter("@Resource", riderAttachment.Resource));
-                    command.Parameters.Add(new SqlParameter("@Tags", riderAttachment.Tags));
                     command.Parameters.Add(new SqlParameter("@ContentType", riderAttachment.ContentType));
-                    command.Parameters.Add(new SqlParameter("@LoggedInUserID", -1));
+                    command.Parameters.Add(new SqlParameter("@Resource", riderAttachment.Content));
+                    command.Parameters.Add(new SqlParameter("@LoggedInUserID", riderAttachment.LoggedInUserID));
                     _dbConnection.Open();
                     await Task.Run(() => command.ExecuteNonQuery());
                     return true;
@@ -158,7 +185,7 @@ namespace united_movers_api.Repositories.Implementations
             }
         }
 
-        
+
         public async Task<Rider> GetRiderByIdAsync(int riderId)
         {
             try
@@ -460,7 +487,7 @@ namespace united_movers_api.Repositories.Implementations
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[ValidateAndCreateRiderID]";
                     command.Parameters.Add(new SqlParameter("@VendorID", request.VendorID));
-                    command.Parameters.Add(new SqlParameter("@FullName", request.FullName)); 
+                    command.Parameters.Add(new SqlParameter("@FullName", request.FullName));
                     command.Parameters.Add(new SqlParameter("@Gender", request.Gender));
                     command.Parameters.Add(new SqlParameter("@DateOfBirth", request.DateOfBirth));
                     command.Parameters.Add(new SqlParameter("@AadhaarNumber", request.AadhaarNumber));

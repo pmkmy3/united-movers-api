@@ -30,9 +30,13 @@ namespace united_movers_api.Services.Implementations
 
 
 
-        public async Task<bool> AddRiderAttachmentAsync(AddRiderAttachment RiderAttachment)
+        public async Task<bool> AddRiderAttachmentAsync(RiderAttachment RiderAttachment)
         {
             return await _RiderRepository.AddRiderAttachmentAsync(RiderAttachment);
+        }
+        public async Task<bool> DeleteRiderAttachmentAsync(RiderAttachment RiderAttachment)
+        {
+            return await _RiderRepository.DeleteRiderAttachmentAsync(RiderAttachment);
         }
 
         public async Task<bool> UpdateRiderBackgroundVerificationDetailsAsync(RiderBackgroundVerification backgroundVerification)

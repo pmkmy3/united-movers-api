@@ -45,7 +45,7 @@ namespace united_movers_api.Controllers
 
         // POST: api/Employee/AddAttachment
         [HttpPost("AddAttachment")]
-        public async Task<IActionResult> AddEmployeeAttachment([FromBody]  AddEmployeeAttachment request)
+        public async Task<IActionResult> AddEmployeeAttachment([FromBody]  EmployeeAttachment request)
         {
             if (!ModelState.IsValid)
             {
@@ -62,7 +62,23 @@ namespace united_movers_api.Controllers
             return Ok("Attachment added successfully");
         }
 
+        [HttpPost("DeleteAttachment")]
+        public async Task<IActionResult> DeleteEmployeeAttachment([FromBody] EmployeeAttachment request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var result = await _employeeService.DeleteEmployeeAttachmentAsync(request);
+
+            if (!result)
+            {
+                return BadRequest("Failed to add attachment");
+            }
+
+            return Ok("Attachment added successfully");
+        }
         // PUT: api/Employee/UpdateBackgroundVerification
         [HttpPut("UpdateBackgroundVerification")]
         public async Task<IActionResult> UpdateEmployeeBackgroundVerificationDetails([FromBody] EmployeeBackgroundVerification  request)

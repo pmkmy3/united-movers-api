@@ -154,24 +154,50 @@ namespace united_movers_api.Repositories.Implementations
                 }
             }
         }
- 
-        public async Task<bool> AddEmployeeAttachmentAsync( AddEmployeeAttachment employeeAttachment)
+
+        public async Task<bool> DeleteEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment)
         {
             try
             {
                 using (IDbCommand command = _dbConnection.CreateCommand())
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "[dbo].[AddEmployeeAttachment]";
+                    command.CommandText = "[dbo].[Sp_DeleteEmployeeAttachments]";
 
+                    command.Parameters.Add(new SqlParameter("@EmplID", employeeAttachment.EmpID));
+                    command.Parameters.Add(new SqlParameter("@AttachmentID", employeeAttachment.AttachmentID));
+                    _dbConnection.Open();
+                    await Task.Run(() => command.ExecuteNonQuery());
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to delete the Attachment ", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+        }
+        public async Task<bool> AddEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment)
+        {
+            try
+            {
+                using (IDbCommand command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[Sp_SaveEmployeeAttachments]";
 
                     command.Parameters.Add(new SqlParameter("@EmpID", employeeAttachment.EmpID));
-                    command.Parameters.Add(new SqlParameter("@AttachmentTypeID", employeeAttachment.AttachmentTypeID));
-                    command.Parameters.Add(new SqlParameter("@ReportTypeID", employeeAttachment.ReportTypeID));
+                    command.Parameters.Add(new SqlParameter("@AttachmentName", employeeAttachment.AttachmentName));
+                    command.Parameters.Add(new SqlParameter("@DocumentTypeID", employeeAttachment.AttachmentTypeID));
                     command.Parameters.Add(new SqlParameter("@NumberOfKB", employeeAttachment.NumberOfKB));
-                    command.Parameters.Add(new SqlParameter("@Resource", employeeAttachment.Resource));
-                    command.Parameters.Add(new SqlParameter("@Tags", employeeAttachment.Tags));
                     command.Parameters.Add(new SqlParameter("@ContentType", employeeAttachment.ContentType));
+                    command.Parameters.Add(new SqlParameter("@Resource", employeeAttachment.Content));
                     command.Parameters.Add(new SqlParameter("@LoggedInUserID", -1));
                     _dbConnection.Open();
                     await Task.Run(() => command.ExecuteNonQuery());
@@ -398,7 +424,7 @@ namespace united_movers_api.Repositories.Implementations
                     command.Parameters.Add(new SqlParameter("@PersonalEmailID", request.PersonalEmailID));
                     command.Parameters.Add(new SqlParameter("@LoggedInUserID", request.LoggedInUserID));
 
-                   
+
                     _dbConnection.Open();
                     await Task.Run(() => command.ExecuteNonQuery());
                     return true;
@@ -457,7 +483,7 @@ namespace united_movers_api.Repositories.Implementations
             }
 
 
-           
+
         }
     }
 }

@@ -58,7 +58,7 @@ namespace united_movers_api.Controllers
        
         // POST: api/Rider/AddAttachment
         [HttpPost("AddAttachment")]
-        public async Task<IActionResult> AddRiderAttachment([FromBody] AddRiderAttachment request)
+        public async Task<IActionResult> AddRiderAttachment([FromBody] RiderAttachment request)
         {
             if (!ModelState.IsValid)
             {
@@ -66,6 +66,24 @@ namespace united_movers_api.Controllers
             }
 
             var result = await _riderService.AddRiderAttachmentAsync(request);
+
+            if (!result)
+            {
+                return BadRequest("Failed to add attachment");
+            }
+
+            return Ok("Attachment added successfully");
+        }
+
+        [HttpPost("DeleteAttachment")]
+        public async Task<IActionResult> DeleteRiderAttachment([FromBody] RiderAttachment request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _riderService.DeleteRiderAttachmentAsync(request);
 
             if (!result)
             {

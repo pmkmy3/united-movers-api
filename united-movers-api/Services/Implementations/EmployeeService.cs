@@ -29,11 +29,14 @@ namespace united_movers_api.Services.Implementations
 
     
 
-        public async Task<bool> AddEmployeeAttachmentAsync( AddEmployeeAttachment employeeAttachment)
+        public async Task<bool> AddEmployeeAttachmentAsync( EmployeeAttachment employeeAttachment)
         {
             return await _employeeRepository.AddEmployeeAttachmentAsync(employeeAttachment);
         }
-
+        public async Task<bool> DeleteEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment)
+        {
+            return await _employeeRepository.DeleteEmployeeAttachmentAsync(employeeAttachment);
+        }
         public async Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync( EmployeeBackgroundVerification backgroundVerification)
         {
             return await _employeeRepository.UpdateEmployeeBackgroundVerificationDetailsAsync(backgroundVerification);    

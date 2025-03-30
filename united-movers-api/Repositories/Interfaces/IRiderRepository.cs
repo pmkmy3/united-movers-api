@@ -10,7 +10,9 @@ namespace united_movers_api.Repositories.Interfaces
         Task<IEnumerable<Vendor>> GetAllVendorsAsync();
 
         Task<Rider> GetRiderByIdAsync(int riderId);
-        Task<bool> AddRiderAttachmentAsync(AddRiderAttachment riderAttachment);
+        Task<bool> AddRiderAttachmentAsync(RiderAttachment riderAttachment);
+
+        Task<bool> DeleteRiderAttachmentAsync(RiderAttachment riderAttachment);
         Task<bool> UpdateRiderBackgroundVerificationDetailsAsync(RiderBackgroundVerification backgroundVerification);
         Task<bool> UpdateRiderContactInformationAsync(RiderContactInformation contactInformation);
         Task<bool> UpdateRiderFinancialDetailsAsync(RiderFinancialDetails financialDetails);
