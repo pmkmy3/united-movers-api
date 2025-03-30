@@ -33,7 +33,10 @@ namespace united_movers_api.Services.Implementations
             return await _RiderRepository.GetRiderByIdAsync(RiderId);
         }
 
-
+        public async Task<IEnumerable<DocumentTypes>> GetRiderDocumentTypesAsync()
+        {
+            return await _RiderRepository.GetRiderDocumentTypesAsnc();
+        }
 
         public async Task<bool> AddRiderAttachmentAsync(RiderAttachment RiderAttachment)
         {

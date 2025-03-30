@@ -64,6 +64,18 @@ namespace united_movers_api.Controllers
             return AttchmentWithContent;
         }
 
+        [HttpGet("GetEmployeeDocumentTypes")]
+        public async Task<IEnumerable<DocumentTypes>> GetEmployeeDocumentTypes()
+        {
+            var employeeDocumentTypes = await _employeeService.GetEmployeeDocumentTypesAsync();
+            if (employeeDocumentTypes == null)
+            {
+                return (IEnumerable<DocumentTypes>)NotFound();
+            }
+
+            return (IEnumerable<DocumentTypes>)Ok(employeeDocumentTypes);
+        }
+
         // POST: api/Employee/AddAttachment
         [HttpPost("AddAttachment")]
         public async Task<IActionResult> AddEmployeeAttachment([FromBody] EmployeeAttachment request)

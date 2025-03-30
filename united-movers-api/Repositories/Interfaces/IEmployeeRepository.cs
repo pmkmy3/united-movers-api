@@ -12,7 +12,7 @@ namespace united_movers_api.Repositories.Interfaces
         //Task<int> InsertEmployeeAsync(Employee employee);
 
         //Task<bool> UpdateEmployeeAsync(Employee employee);
-
+        Task<IEnumerable<DocumentTypes>> GetEmployeeDocumentTypesAsync();
         Task<EmployeeAttachment> GetAttachmentContentByAttachmentIDAsync(Guid attachmentID);
         Task<bool> AddEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment );
 

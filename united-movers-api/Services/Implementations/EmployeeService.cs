@@ -32,6 +32,11 @@ namespace united_movers_api.Services.Implementations
             return await _employeeRepository.GetAttachmentContentByAttachmentIDAsync(attachmentID);
         }
 
+        public async Task<IEnumerable<DocumentTypes>> GetEmployeeDocumentTypesAsync()
+        {
+            return await _employeeRepository.GetEmployeeDocumentTypesAsync();
+        }
+
         public async Task<bool> AddEmployeeAttachmentAsync( EmployeeAttachment employeeAttachment)
         {
             return await _employeeRepository.AddEmployeeAttachmentAsync(employeeAttachment);

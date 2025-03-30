@@ -60,6 +60,17 @@ namespace united_movers_api.Controllers
             return AttchmentWithContent;
         }
 
+        [HttpGet("GetRiderDocumentTypes")]
+        public async Task<IEnumerable<DocumentTypes>> GetRiderDocumentTypes()
+        {
+            var riderDocumentTypes = await _riderService.GetRiderDocumentTypesAsync();
+            if (riderDocumentTypes == null)
+            {
+                return (IEnumerable<DocumentTypes>)NotFound();
+            }
+
+            return (IEnumerable<DocumentTypes>)Ok(riderDocumentTypes);
+        }
 
         // POST: api/Rider/AddAttachment
         [HttpPost("AddAttachment")]

@@ -319,6 +319,52 @@ namespace united_movers_api.Repositories.Implementations
             }
         }
 
+
+        public async Task<IEnumerable<DocumentTypes>> GetEmployeeDocumentTypesAsync()
+        {
+            try
+            {
+                using (var command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[sp_GetEmployeeDocumentTypes]";
+
+                    _dbConnection.Open();
+                    using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
+                    {
+                        if (reader.Read())
+                        {
+                            List<DocumentTypes> documentTypes = new List<DocumentTypes>();
+                            do
+                            {
+                                documentTypes.Add(new DocumentTypes
+                                {
+                                    DocumentTypeID = reader.GetInt32(reader.GetOrdinal("DocumentTypeID")),
+                                    DocumentType = reader.GetString(reader.GetOrdinal("DocumentTypeName"))
+                                });
+                            }
+                            while (reader.Read());
+                            return documentTypes;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to get the rider document types", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+        }
         public async Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync(EmployeeBackgroundVerification backgroundVerification)
         {
 
