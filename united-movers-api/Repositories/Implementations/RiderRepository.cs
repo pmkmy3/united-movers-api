@@ -214,7 +214,7 @@ namespace united_movers_api.Repositories.Implementations
 
 
       
-        public async Task<bool> DeleteRiderAttachmentAsync(RiderAttachment riderAttachment)
+        public async Task<bool> DeleteRiderAttachmentAsync(Guid attachmentID)
         {
             try
             {
@@ -222,9 +222,8 @@ namespace united_movers_api.Repositories.Implementations
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[Sp_DeleteRiderAttachments]";
-
-                    command.Parameters.Add(new SqlParameter("@RiderID", riderAttachment.RiderID));
-                    command.Parameters.Add(new SqlParameter("@AttachmentID", riderAttachment.AttachmentID)); 
+                     
+                    command.Parameters.Add(new SqlParameter("@AttachmentID", attachmentID)); 
                     _dbConnection.Open();
                     await Task.Run(() => command.ExecuteNonQuery());
                     return true;

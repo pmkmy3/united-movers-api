@@ -41,9 +41,9 @@ namespace united_movers_api.Services.Implementations
         {
             return await _employeeRepository.AddEmployeeAttachmentAsync(employeeAttachment);
         }
-        public async Task<bool> DeleteEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment)
+        public async Task<bool> DeleteEmployeeAttachmentAsync(Guid attachmentID)
         {
-            return await _employeeRepository.DeleteEmployeeAttachmentAsync(employeeAttachment);
+            return await _employeeRepository.DeleteEmployeeAttachmentAsync(attachmentID);
         }
 
         public async Task<IEnumerable<EmployeeAttachment>> GetEmployeeAttachmentsByEmplIDasync(int emplID)

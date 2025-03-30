@@ -14,7 +14,7 @@ namespace united_movers_api.Repositories.Interfaces
         Task<IEnumerable<DocumentTypes>> GetRiderDocumentTypesAsnc();
         Task<RiderAttachment> GetAttachmentContentByAttachmentIDAsync(Guid attachmentID);
         Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByRiderIDAsync(int riderID);
-        Task<bool> DeleteRiderAttachmentAsync(RiderAttachment riderAttachment);
+        Task<bool> DeleteRiderAttachmentAsync(Guid attachmentID);
         Task<bool> UpdateRiderBackgroundVerificationDetailsAsync(RiderBackgroundVerification backgroundVerification);
         Task<bool> UpdateRiderContactInformationAsync(RiderContactInformation contactInformation);
         Task<bool> UpdateRiderFinancialDetailsAsync(RiderFinancialDetails financialDetails);

@@ -16,7 +16,7 @@ namespace united_movers_api.Repositories.Interfaces
         Task<EmployeeAttachment> GetAttachmentContentByAttachmentIDAsync(Guid attachmentID);
         Task<bool> AddEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment );
 
-        Task<bool> DeleteEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment);
+        Task<bool> DeleteEmployeeAttachmentAsync(Guid attachmentID);
         Task<IEnumerable<EmployeeAttachment>> GetEmployeeAttachmentsByEmplID(int emplID);
         Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync(EmployeeBackgroundVerification backgroundVerification);
         Task<bool> UpdateEmployeeContactInformationAsync(EmployeeContactInformation contactInformation);

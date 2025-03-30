@@ -42,9 +42,9 @@ namespace united_movers_api.Services.Implementations
         {
             return await _RiderRepository.AddRiderAttachmentAsync(RiderAttachment);
         }
-        public async Task<bool> DeleteRiderAttachmentAsync(RiderAttachment RiderAttachment)
+        public async Task<bool> DeleteRiderAttachmentAsync(Guid attachmentID)
         {
-            return await _RiderRepository.DeleteRiderAttachmentAsync(RiderAttachment);
+            return await _RiderRepository.DeleteRiderAttachmentAsync(attachmentID);
         }
 
         public async Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByRiderID(int RiderID)

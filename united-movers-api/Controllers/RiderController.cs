@@ -91,15 +91,15 @@ namespace united_movers_api.Controllers
             return Ok("Attachment added successfully");
         }
 
-        [HttpPost("DeleteAttachment")]
-        public async Task<IActionResult> DeleteRiderAttachment([FromBody] RiderAttachment request)
+        [HttpDelete("DeleteAttachment/{attachmentID}")]
+        public async Task<IActionResult> DeleteRiderAttachment(Guid attachmentID)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _riderService.DeleteRiderAttachmentAsync(request);
+            var result = await _riderService.DeleteRiderAttachmentAsync(attachmentID);
 
             if (!result)
             {

@@ -1,4 +1,5 @@
-﻿using united_movers_api.Models;
+﻿using System.Net.Mail;
+using united_movers_api.Models;
 
 namespace united_movers_api.Services.Interfaces
 {
@@ -14,15 +15,15 @@ namespace united_movers_api.Services.Interfaces
 
         Task<IEnumerable<DocumentTypes>> GetEmployeeDocumentTypesAsync();
         Task<EmployeeAttachment> GetAttachmentContentByAttachmentID(Guid attachmentID);
-        Task<bool> AddEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment );
+        Task<bool> AddEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment);
         Task<IEnumerable<EmployeeAttachment>> GetEmployeeAttachmentsByEmplIDasync(int emplID);
-        Task<bool> DeleteEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment);
-        Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync( EmployeeBackgroundVerification backgroundVerification);
+        Task<bool> DeleteEmployeeAttachmentAsync(Guid attachmentID);
+        Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync(EmployeeBackgroundVerification backgroundVerification);
         Task<bool> UpdateEmployeeContactInformationAsync(EmployeeContactInformation contactInformation);
-        Task<bool> UpdateEmployeeFinancialDetailsAsync( EmployeeFinancialDetails financialDetails);
+        Task<bool> UpdateEmployeeFinancialDetailsAsync(EmployeeFinancialDetails financialDetails);
         Task<bool> UpdateEmployeePersonalInformation(ValidateAndCreateEmployeeIDRequest request);
 
-        Task< CreateEmployeeResponse> ValidateAndCreateEmployeeIDAsync(ValidateAndCreateEmployeeIDRequest request);
+        Task<CreateEmployeeResponse> ValidateAndCreateEmployeeIDAsync(ValidateAndCreateEmployeeIDRequest request);
         Task<bool> ActivateOrDeactivateEmployeeAsync(ActivateOrDeactivateEmployeeRequest request);
 
     }
