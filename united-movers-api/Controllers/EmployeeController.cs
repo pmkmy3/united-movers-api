@@ -43,9 +43,21 @@ namespace united_movers_api.Controllers
             return Ok(employee);
         }
 
+        [HttpGet("GetAttachments/{id}")]
+        public async Task<IEnumerable<EmployeeAttachment>> GetEmployeeAttachmentsByEmplID(int emplID)
+        {
+            var employeeAttachments = await _employeeService.GetEmployeeAttachmentsByEmplIDasync(emplID);
+            if (employeeAttachments == null)
+            {
+                return (IEnumerable<EmployeeAttachment>)NotFound();
+            }
+
+            return (IEnumerable<EmployeeAttachment>)Ok(employeeAttachments);
+        }
+
         // POST: api/Employee/AddAttachment
         [HttpPost("AddAttachment")]
-        public async Task<IActionResult> AddEmployeeAttachment([FromBody]  EmployeeAttachment request)
+        public async Task<IActionResult> AddEmployeeAttachment([FromBody] EmployeeAttachment request)
         {
             if (!ModelState.IsValid)
             {
@@ -79,9 +91,13 @@ namespace united_movers_api.Controllers
 
             return Ok("Attachment added successfully");
         }
+
+
+
+
         // PUT: api/Employee/UpdateBackgroundVerification
         [HttpPut("UpdateBackgroundVerification")]
-        public async Task<IActionResult> UpdateEmployeeBackgroundVerificationDetails([FromBody] EmployeeBackgroundVerification  request)
+        public async Task<IActionResult> UpdateEmployeeBackgroundVerificationDetails([FromBody] EmployeeBackgroundVerification request)
         {
             if (!ModelState.IsValid)
             {
@@ -129,7 +145,7 @@ namespace united_movers_api.Controllers
 
         // PUT: api/Employee/UpdateFinancialDetails
         [HttpPut("UpdateFinancialDetails")]
-        public async Task<IActionResult> UpdateEmployeeFinancialDetails([FromBody]  EmployeeFinancialDetails financialDetails)
+        public async Task<IActionResult> UpdateEmployeeFinancialDetails([FromBody] EmployeeFinancialDetails financialDetails)
         {
             try
             {

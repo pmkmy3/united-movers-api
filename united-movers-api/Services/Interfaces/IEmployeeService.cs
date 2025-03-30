@@ -13,7 +13,7 @@ namespace united_movers_api.Services.Interfaces
         //Task<bool> UpdateEmployeeAsync(Employee employee);
 
         Task<bool> AddEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment );
-
+        Task<IEnumerable<EmployeeAttachment>> GetEmployeeAttachmentsByEmplIDasync(int emplID);
         Task<bool> DeleteEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment);
         Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync( EmployeeBackgroundVerification backgroundVerification);
         Task<bool> UpdateEmployeeContactInformationAsync(EmployeeContactInformation contactInformation);

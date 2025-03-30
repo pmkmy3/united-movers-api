@@ -4,6 +4,9 @@
     {
         public int EmpID { get; set; }
         public int AttachmentTypeID { get; set; }
+
+
+        public string  AttachmentType { get; set; }
         public string AttachmentName { get; set; }
         public string ContentType { get; set; }
         public float NumberOfKB { get; set; }

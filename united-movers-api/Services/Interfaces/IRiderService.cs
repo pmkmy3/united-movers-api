@@ -14,6 +14,7 @@ namespace united_movers_api.Services.Interfaces
         Task<bool> AddRiderAttachmentAsync(RiderAttachment riderAttachment);
 
         Task<bool> DeleteRiderAttachmentAsync(RiderAttachment riderAttachment);
+        Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByRiderID(int riderID);
         Task<bool> UpdateRiderBackgroundVerificationDetailsAsync(RiderBackgroundVerification backgroundVerification);
         Task<bool> UpdateRiderContactInformationAsync(RiderContactInformation contactInformation);
         Task<bool> UpdateRiderFinancialDetailsAsync(RiderFinancialDetails financialDetails);

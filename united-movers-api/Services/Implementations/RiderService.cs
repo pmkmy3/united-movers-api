@@ -39,6 +39,10 @@ namespace united_movers_api.Services.Implementations
             return await _RiderRepository.DeleteRiderAttachmentAsync(RiderAttachment);
         }
 
+        public async Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByRiderID(int RiderID)
+        {
+            return await _RiderRepository.GetRiderAttachmentsByEmplID(RiderID);
+        }
         public async Task<bool> UpdateRiderBackgroundVerificationDetailsAsync(RiderBackgroundVerification backgroundVerification)
         {
             return await _RiderRepository.UpdateRiderBackgroundVerificationDetailsAsync(backgroundVerification);

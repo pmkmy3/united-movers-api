@@ -185,6 +185,62 @@ namespace united_movers_api.Repositories.Implementations
             }
         }
 
+        public async Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByEmplID(int riderID)
+        {
+
+            try
+            {
+                using (var command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[sp_GetRiderAttachmentsByID]";
+                    IDataParameter parameter = command.CreateParameter();
+                    parameter.ParameterName = "@RiderID";
+                    parameter.Value = riderID;
+                    parameter.DbType = DbType.Int32;
+                    command.Parameters.Add(parameter);
+
+                    _dbConnection.Open();
+                    using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
+                    {
+                        if (reader.Read())
+                        {
+                            List<RiderAttachment> attachments = new List<RiderAttachment>();
+                            do
+                            {
+                                attachments.Add(new RiderAttachment
+                                {
+                                    //A.ContentType,lkp.LookupName AS DocumentType,AttachmentId ,AttachmentName
+                                    ContentType = reader["ContentType"]?.ToString(),
+                                    AttachmentType = reader["DocumentType"]?.ToString(),
+                                    AttachmentID = Guid.Parse(reader["AttachmentID"].ToString()),
+                                    AttachmentName = reader["AttachmentName"]?.ToString(),
+                                    RiderID = riderID
+                                });
+
+                            }
+                            while (reader.Read());
+                            return attachments;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to get the attachments for the employee", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+        }
 
         public async Task<Rider> GetRiderByIdAsync(int riderId)
         {

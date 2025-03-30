@@ -2,6 +2,8 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Data;
+using System.Net.Mail;
+using System.Xml.Linq;
 using united_movers_api.Common;
 using united_movers_api.Models;
 using united_movers_api.Repositories.Interfaces;
@@ -17,7 +19,7 @@ namespace united_movers_api.Repositories.Implementations
             this._dbConnection = dbConnection;
         }
 
-        public async Task<IEnumerable<EmployeeShort>> GetAllActiveEmployeesAsync()
+          public async Task<IEnumerable<EmployeeShort>> GetAllActiveEmployeesAsync()
         {
             try
             {
@@ -216,6 +218,62 @@ namespace united_movers_api.Repositories.Implementations
                 }
             }
 
+        }
+        public async Task<IEnumerable<EmployeeAttachment>> GetEmployeeAttachmentsByEmplID(int emplID)
+        {
+
+            try
+            {
+                using (var command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[sp_GetEmployeeAttachmentsByID]";
+                    IDataParameter parameter = command.CreateParameter();
+                    parameter.ParameterName = "@EmpID";
+                    parameter.Value = emplID;
+                    parameter.DbType = DbType.Int32;
+                    command.Parameters.Add(parameter);
+
+                    _dbConnection.Open();
+                    using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
+                    {
+                        if (reader.Read())
+                        {
+                            List<EmployeeAttachment> attachments = new List<EmployeeAttachment>();
+                            do
+                            {
+                                attachments.Add(new EmployeeAttachment
+                                {
+                                    //A.ContentType,lkp.LookupName AS DocumentType,AttachmentId ,AttachmentName
+                                    ContentType = reader["ContentType"]?.ToString(),
+                                    AttachmentType = reader["DocumentType"]?.ToString(),
+                                    AttachmentID = Guid.Parse(reader["AttachmentID"].ToString()),
+                                    AttachmentName = reader["AttachmentName"]?.ToString(),
+                                    EmpID = emplID
+                                });
+
+                            }
+                            while (reader.Read());
+                            return attachments;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to get the attachments for the employee", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
         }
 
         public async Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync(EmployeeBackgroundVerification backgroundVerification)

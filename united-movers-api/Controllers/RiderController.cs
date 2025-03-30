@@ -93,7 +93,17 @@ namespace united_movers_api.Controllers
             return Ok("Attachment added successfully");
         }
 
+        [HttpGet("GetAttachments/{id}")]
+        public async Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByRiderID(int riderID)
+        {
+            var riderAttachments = await _riderService.GetRiderAttachmentsByRiderID(riderID);
+            if (riderAttachments == null)
+            {
+                return (IEnumerable<RiderAttachment>)NotFound();
+            }
 
+            return (IEnumerable<RiderAttachment>)Ok(riderAttachments);
+        }
         // PUT: api/Rider/UpdateBackgroundVerification
         [HttpPut("UpdateBackgroundVerification")]
         public async Task<IActionResult> UpdateRiderBackgroundVerificationDetails([FromBody] RiderBackgroundVerification request)

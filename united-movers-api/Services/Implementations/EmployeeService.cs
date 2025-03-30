@@ -37,6 +37,11 @@ namespace united_movers_api.Services.Implementations
         {
             return await _employeeRepository.DeleteEmployeeAttachmentAsync(employeeAttachment);
         }
+
+        public async Task<IEnumerable<EmployeeAttachment>> GetEmployeeAttachmentsByEmplIDasync(int emplID)
+        {
+            return await _employeeRepository.GetEmployeeAttachmentsByEmplID(emplID);
+        }
         public async Task<bool> UpdateEmployeeBackgroundVerificationDetailsAsync( EmployeeBackgroundVerification backgroundVerification)
         {
             return await _employeeRepository.UpdateEmployeeBackgroundVerificationDetailsAsync(backgroundVerification);    
