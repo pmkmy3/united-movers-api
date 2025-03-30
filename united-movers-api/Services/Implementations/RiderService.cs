@@ -49,7 +49,7 @@ namespace united_movers_api.Services.Implementations
 
         public async Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByRiderID(int RiderID)
         {
-            return await _RiderRepository.GetRiderAttachmentsByEmplID(RiderID);
+            return await _RiderRepository.GetRiderAttachmentsByRiderIDAsync(RiderID);
         }
         public async Task<bool> UpdateRiderBackgroundVerificationDetailsAsync(RiderBackgroundVerification backgroundVerification)
         {

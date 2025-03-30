@@ -224,6 +224,7 @@ namespace united_movers_api.Repositories.Implementations
 
             try
             {
+                List<EmployeeAttachment> attachments = new List<EmployeeAttachment>();
                 using (var command = _dbConnection.CreateCommand())
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -237,7 +238,7 @@ namespace united_movers_api.Repositories.Implementations
                     _dbConnection.Open();
                     using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
                     {
-                        List<EmployeeAttachment> attachments = new List<EmployeeAttachment>();
+                       
                         if (reader.Read())
                         {   
                             do
@@ -294,9 +295,9 @@ namespace united_movers_api.Repositories.Implementations
                             return new EmployeeAttachment
                             {
                                 AttachmentID = attachmentID,
-                                NumberOfKB = reader.GetFloat(reader.GetOrdinal("NumberOfKB")),
-                                ContentType = reader.GetString(reader.GetOrdinal("ContentType")),
-                                Content = reader.GetString(reader.GetOrdinal("Content"))
+                                NumberOfKB =  reader["NumberOfKB"].ToString(),
+                                ContentType = reader["ContentType"].ToString(),
+                                Content =  reader["Content"].ToString()
                             };
                         }
                         else
@@ -339,8 +340,8 @@ namespace united_movers_api.Repositories.Implementations
                             {
                                 documentTypes.Add(new DocumentTypes
                                 {
-                                    DocumentTypeID = reader.GetInt32(reader.GetOrdinal("DocumentTypeID")),
-                                    DocumentType = reader.GetString(reader.GetOrdinal("DocumentTypeName"))
+                                    DocumentTypeID =  Convert.ToInt32( reader["DocumentTypeID"]),
+                                    DocumentType =  reader["DocumentTypeName"].ToString()
                                 });
                             }
                             while (reader.Read());

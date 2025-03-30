@@ -9,7 +9,7 @@
         public string AttachmentType { get; set; }
         public string AttachmentName { get; set; }
         public string ContentType { get; set; }
-        public float NumberOfKB { get; set; }
+        public string NumberOfKB { get; set; }
         public string Content { get; set; }
         //public string Tags { get; set; }
 

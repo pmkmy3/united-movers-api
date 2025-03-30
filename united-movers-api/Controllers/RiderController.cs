@@ -110,15 +110,15 @@ namespace united_movers_api.Controllers
         }
 
         [HttpGet("GetAttachments/{riderID}")]
-        public async Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByRiderID(int riderID)
+        public async Task<IActionResult> GetRiderAttachmentsByRiderID(int riderID)
         {
             var riderAttachments = await _riderService.GetRiderAttachmentsByRiderID(riderID);
             if (riderAttachments == null)
             {
-                return (IEnumerable<RiderAttachment>)NotFound();
+                return BadRequest("Failed to fetch all employee attachments");
             }
 
-            return (IEnumerable<RiderAttachment>)Ok(riderAttachments);
+            return Ok(riderAttachments);
         }
         // PUT: api/Rider/UpdateBackgroundVerification
         [HttpPut("UpdateBackgroundVerification")]

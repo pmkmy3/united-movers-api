@@ -187,9 +187,9 @@ namespace united_movers_api.Repositories.Implementations
                             return new RiderAttachment
                             {
                                 AttachmentID = attachmentID,
-                                NumberOfKB = reader.GetFloat(reader.GetOrdinal("NumberOfKB")),
-                                ContentType = reader.GetString(reader.GetOrdinal("ContentType")),
-                                Content = (byte[])reader["Content"]
+                                NumberOfKB =  reader["NumberOfKB"].ToString(),
+                                ContentType =  reader["ContentType"].ToString(),
+                                Content =  reader["Content"].ToString()
                             };
                         }
                         else
@@ -277,11 +277,12 @@ namespace united_movers_api.Repositories.Implementations
             }
         }
 
-        public async Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByEmplID(int riderID)
+        public async Task<IEnumerable<RiderAttachment>> GetRiderAttachmentsByRiderIDAsync(int riderID)
         {
 
             try
             {
+                List<RiderAttachment> attachments = new List<RiderAttachment>();
                 using (var command = _dbConnection.CreateCommand())
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -297,7 +298,7 @@ namespace united_movers_api.Repositories.Implementations
                     {
                         if (reader.Read())
                         {
-                            List<RiderAttachment> attachments = new List<RiderAttachment>();
+                           
                             do
                             {
                                 attachments.Add(new RiderAttachment
@@ -316,7 +317,7 @@ namespace united_movers_api.Repositories.Implementations
                         }
                         else
                         {
-                            return null;
+                            return attachments;
                         }
                     }
                 }
