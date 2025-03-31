@@ -596,8 +596,8 @@ namespace united_movers_api.Repositories.Implementations
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[UpdateRiderPersonalInformation]";
-                    command.Parameters.Add(new SqlParameter("@EmployeeID", request.RiderID));
-                    command.Parameters.Add(new SqlParameter("@FirstName", request.FullName));
+                    command.Parameters.Add(new SqlParameter("@RiderID", request.RiderID));
+                    command.Parameters.Add(new SqlParameter("@FullName", request.FullName));
                     command.Parameters.Add(new SqlParameter("@Gender", request.Gender));
                     command.Parameters.Add(new SqlParameter("@DateOfBirth", request.DateOfBirth));
                     command.Parameters.Add(new SqlParameter("@AadhaarNumber", request.AadhaarNumber));
