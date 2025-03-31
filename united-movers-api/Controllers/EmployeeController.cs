@@ -264,10 +264,10 @@ namespace united_movers_api.Controllers
         }
 
 
-        [HttpGet("GetEmployeeAssignedRolesByEmplID/{emplID}")]
-        public async Task<IActionResult> GetEmployeeAssignedRolesByEmplID(int employeeID)
+        [HttpGet("GetEmployeeAssignedRolesByEmplID/{id}")]
+        public async Task<IActionResult> GetEmployeeAssignedRolesByEmplID(int id)
         {
-            var employeeRoles = await _employeeService.GetEmployeeAssignedRolesByEmplID(employeeID);
+            var employeeRoles = await _employeeService.GetEmployeeAssignedRolesByEmplID(id);
             if (employeeRoles == null)
             {
                 return BadRequest("Failed to fetch all employee roles");
