@@ -45,7 +45,8 @@ namespace united_movers_api.Repositories.Implementations
                                     PANNumber = reader.IsDBNull(reader.GetOrdinal("PANNumber")) ? "" : reader.GetString(reader.GetOrdinal("PANNumber")),
                                     ContactNumber = reader.IsDBNull(reader.GetOrdinal("ContactNumber")) ? "" : reader.GetString(reader.GetOrdinal("ContactNumber")),
                                     EmailID = reader.IsDBNull(reader.GetOrdinal("EmailID")) ? "" : reader.GetString(reader.GetOrdinal("EmailID")),
-                                    VendorName = reader.IsDBNull(reader.GetOrdinal("VendorName")) ? "" : reader.GetString(reader.GetOrdinal("VendorName"))
+                                    VendorName = reader.IsDBNull(reader.GetOrdinal("VendorName")) ? "" : reader.GetString(reader.GetOrdinal("VendorName")),
+                                    IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
                                 });
                             }
                             while (reader.Read());
@@ -187,9 +188,9 @@ namespace united_movers_api.Repositories.Implementations
                             return new RiderAttachment
                             {
                                 AttachmentID = attachmentID,
-                                NumberOfKB =  reader["NumberOfKB"].ToString(),
-                                ContentType =  reader["ContentType"].ToString(),
-                                Content =  reader["Content"].ToString()
+                                NumberOfKB = reader["NumberOfKB"].ToString(),
+                                ContentType = reader["ContentType"].ToString(),
+                                Content = reader["Content"].ToString()
                             };
                         }
                         else
@@ -213,7 +214,7 @@ namespace united_movers_api.Repositories.Implementations
         }
 
 
-      
+
         public async Task<bool> DeleteRiderAttachmentAsync(Guid attachmentID)
         {
             try
@@ -222,8 +223,8 @@ namespace united_movers_api.Repositories.Implementations
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[Sp_DeleteRiderAttachments]";
-                     
-                    command.Parameters.Add(new SqlParameter("@AttachmentID", attachmentID)); 
+
+                    command.Parameters.Add(new SqlParameter("@AttachmentID", attachmentID));
                     _dbConnection.Open();
                     await Task.Run(() => command.ExecuteNonQuery());
                     return true;
@@ -297,7 +298,7 @@ namespace united_movers_api.Repositories.Implementations
                     {
                         if (reader.Read())
                         {
-                           
+
                             do
                             {
                                 attachments.Add(new RiderAttachment
@@ -310,8 +311,8 @@ namespace united_movers_api.Repositories.Implementations
                                     AttachmentTypeID = Convert.ToInt32(reader["DocumentTypeID"]),
                                     NumberOfKB = reader["NumberOfKB"]?.ToString(),
                                     RiderID = riderID
-                                                                      
-                                   
+
+
                                 });
 
                             }

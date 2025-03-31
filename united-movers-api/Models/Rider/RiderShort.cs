@@ -17,5 +17,7 @@
         public string EmailID { get; set; }
 
         public string VendorName { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using united_movers_api.Models;
+using united_movers_api.Models.Common;
 using united_movers_api.Repositories.Implementations;
 using united_movers_api.Repositories.Interfaces;
 using united_movers_api.Services.Interfaces;
@@ -32,9 +33,29 @@ namespace united_movers_api.Services.Implementations
             return await _employeeRepository.GetAttachmentContentByAttachmentIDAsync(attachmentID);
         }
 
+        public async Task<IEnumerable<Roles>> GetEmployeeRolesAsync()
+        {
+            return await _employeeRepository.GetEmployeeRolesAsync();
+        }
+
         public async Task<IEnumerable<DocumentTypes>> GetEmployeeDocumentTypesAsync()
         {
             return await _employeeRepository.GetEmployeeDocumentTypesAsync();
+        }
+
+
+        public async Task<bool> AddEmployeeRoleAsync(EmployeeRoleMapping employeeRoleMapping)
+        {
+            return await _employeeRepository.AddEmployeeRoleAsync(employeeRoleMapping);
+        }
+        public async Task<bool> DeleteEmployeeRoleAsync(int roleMappingID)
+        {
+            return await _employeeRepository.DeleteEmployeeRoleAsync(roleMappingID);
+        }
+
+        public async Task<IEnumerable<EmployeeRoleMapping>> GetEmployeeAssignedRolesByEmplID(int emplID)
+        {
+            return await _employeeRepository.GetEmployeeAssignedRolesByEmplID(emplID);
         }
 
         public async Task<bool> AddEmployeeAttachmentAsync( EmployeeAttachment employeeAttachment)

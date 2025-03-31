@@ -6,6 +6,7 @@ using System.Net.Mail;
 using System.Xml.Linq;
 using united_movers_api.Common;
 using united_movers_api.Models;
+using united_movers_api.Models.Common;
 using united_movers_api.Repositories.Interfaces;
 
 namespace united_movers_api.Repositories.Implementations
@@ -19,7 +20,7 @@ namespace united_movers_api.Repositories.Implementations
             this._dbConnection = dbConnection;
         }
 
-          public async Task<IEnumerable<EmployeeShort>> GetAllActiveEmployeesAsync()
+        public async Task<IEnumerable<EmployeeShort>> GetAllActiveEmployeesAsync()
         {
             try
             {
@@ -50,7 +51,8 @@ namespace united_movers_api.Repositories.Implementations
                                     PersonalEmailID = reader["PersonalEmailID"]?.ToString(),
                                     ContactNumber = reader["ContactNumber"]?.ToString(),
                                     AadhaarNumber = reader["AadhaarNumber"]?.ToString(),
-                                    PanNumber = reader["PanNumber"]?.ToString()
+                                    PanNumber = reader["PanNumber"]?.ToString(),
+                                    IsActive = Convert.ToBoolean(reader["IsActive"])
                                 });
 #pragma warning restore CS8601 // Possible null reference assignment.
                             }
@@ -166,7 +168,7 @@ namespace united_movers_api.Repositories.Implementations
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "[dbo].[Sp_DeleteEmployeeAttachments]";
 
-                   
+
                     command.Parameters.Add(new SqlParameter("@AttachmentID", attachmentID));
                     _dbConnection.Open();
                     await Task.Run(() => command.ExecuteNonQuery());
@@ -238,9 +240,9 @@ namespace united_movers_api.Repositories.Implementations
                     _dbConnection.Open();
                     using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
                     {
-                       
+
                         if (reader.Read())
-                        {   
+                        {
                             do
                             {
                                 attachments.Add(new EmployeeAttachment
@@ -250,7 +252,7 @@ namespace united_movers_api.Repositories.Implementations
                                     AttachmentType = reader["DocumentType"]?.ToString(),
                                     AttachmentID = Guid.Parse(reader["AttachmentID"].ToString()),
                                     AttachmentName = reader["AttachmentName"]?.ToString(),
-                                    AttachmentTypeID = Convert.ToInt32( reader["DocumentTypeID"] ),
+                                    AttachmentTypeID = Convert.ToInt32(reader["DocumentTypeID"]),
                                     NumberOfKB = reader["NumberOfKB"]?.ToString(),
                                     EmployeeID = emplID
                                 });
@@ -279,6 +281,134 @@ namespace united_movers_api.Repositories.Implementations
             }
         }
 
+        #region Roles
+
+        public async Task<bool> DeleteEmployeeRoleAsync(int roleMappingID)
+        {
+            try
+            {
+                using (IDbCommand command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[Sp_DeleteEmployeeRole]";
+
+
+                    command.Parameters.Add(new SqlParameter("@MappingID", roleMappingID));
+                    command.Parameters.Add(new SqlParameter("@LoggedInUserID", -1));
+                    _dbConnection.Open();
+                    await Task.Run(() => command.ExecuteNonQuery());
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to delete the Role ", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+        }
+        public async Task<bool> AddEmployeeRoleAsync(EmployeeRoleMapping employeeRole)
+        {
+            try
+            {
+                using (IDbCommand command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[sp_SaveEmployeeRole]";
+
+                    command.Parameters.Add(new SqlParameter("@RoleID", employeeRole.RoleID));
+                    command.Parameters.Add(new SqlParameter("@Comments", employeeRole.Comments));
+                    command.Parameters.Add(new SqlParameter("@EmployeeID", employeeRole.EmployeeID));
+                    command.Parameters.Add(new SqlParameter("@IsReadOnly", employeeRole.IsReadOnly));
+                    command.Parameters.Add(new SqlParameter("@IsReadWrite", employeeRole.IsReadWrite));
+                    command.Parameters.Add(new SqlParameter("@LoggedInUserID", -1));
+                    _dbConnection.Open();
+                    await Task.Run(() => command.ExecuteNonQuery());
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to add the Role ", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+
+        }
+        public async Task<IEnumerable<EmployeeRoleMapping>> GetEmployeeAssignedRolesByEmplID(int employeeID)
+        {
+
+            try
+            {
+                List<EmployeeRoleMapping> roles = new List<EmployeeRoleMapping>();
+                using (var command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[sp_GetEmployeeRolesByID]";
+                    IDataParameter parameter = command.CreateParameter();
+                    parameter.ParameterName = "@EmployeeID";
+                    parameter.Value = employeeID;
+                    parameter.DbType = DbType.Int32;
+                    command.Parameters.Add(parameter);
+
+                    _dbConnection.Open();
+                    using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
+                    {
+
+                        if (reader.Read())
+                        {
+                            do
+                            {
+                                roles.Add(new EmployeeRoleMapping
+                                {
+                                    IsReadWrite = Convert.ToBoolean(reader["IsReadWrite"]),
+                                    IsReadOnly = Convert.ToBoolean(reader["IsReadOnly"]),
+                                    Comments = reader["Comments"]?.ToString(),
+                                    RoleID = Convert.ToInt32(reader["RoleID"]),
+                                    RoleName = reader["RoleName"]?.ToString(),
+                                    EmployeeID = employeeID,
+                                    IsActive = Convert.ToBoolean(reader["IsActive"]),
+                                    MappingID = Convert.ToInt32(reader["MappingID"])
+                                }
+                               );
+
+                            }
+                            while (reader.Read());
+                            return roles;
+                        }
+                        else
+                        {
+                            return roles;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to get the roles for the employee", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+        }
+
+
+        #endregion
+
         public async Task<EmployeeAttachment> GetAttachmentContentByAttachmentIDAsync(Guid attachmentID)
         {
             try
@@ -297,9 +427,9 @@ namespace united_movers_api.Repositories.Implementations
                             return new EmployeeAttachment
                             {
                                 AttachmentID = attachmentID,
-                                NumberOfKB =  reader["NumberOfKB"].ToString(),
+                                NumberOfKB = reader["NumberOfKB"].ToString(),
                                 ContentType = reader["ContentType"].ToString(),
-                                Content =  reader["Content"].ToString()
+                                Content = reader["Content"].ToString()
                             };
                         }
                         else
@@ -312,6 +442,52 @@ namespace united_movers_api.Repositories.Implementations
             catch (Exception ex)
             {
                 throw new Exception("An error occurred while trying to get the attachment content by ID", ex);
+            }
+            finally
+            {
+                if (_dbConnection.State == ConnectionState.Open)
+                {
+                    _dbConnection.Close();
+                }
+            }
+        }
+
+        public async Task<IEnumerable<Roles>> GetEmployeeRolesAsync()
+        {
+            try
+            {
+                using (var command = _dbConnection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[dbo].[sp_GetActiveRoles]";
+
+                    _dbConnection.Open();
+                    using (IDataReader reader = await Task.Run(() => command.ExecuteReader()))
+                    {
+                        if (reader.Read())
+                        {
+                            List<Roles> employeeRoles = new List<Roles>();
+                            do
+                            {
+                                employeeRoles.Add(new Roles
+                                {
+                                    RoleID = Convert.ToInt32(reader["RoleID"]),
+                                    RoleName = reader["RoleName"].ToString()
+                                });
+                            }
+                            while (reader.Read());
+                            return employeeRoles;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while trying to get the Employee Roles", ex);
             }
             finally
             {
@@ -342,8 +518,8 @@ namespace united_movers_api.Repositories.Implementations
                             {
                                 documentTypes.Add(new DocumentTypes
                                 {
-                                    DocumentTypeID =  Convert.ToInt32( reader["DocumentTypeID"]),
-                                    DocumentType =  reader["DocumentTypeName"].ToString()
+                                    DocumentTypeID = Convert.ToInt32(reader["DocumentTypeID"]),
+                                    DocumentType = reader["DocumentTypeName"].ToString()
                                 });
                             }
                             while (reader.Read());

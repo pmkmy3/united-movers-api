@@ -1,5 +1,6 @@
 ﻿using System.Net.Mail;
 using united_movers_api.Models;
+using united_movers_api.Models.Common;
 
 namespace united_movers_api.Services.Interfaces
 {
@@ -12,7 +13,7 @@ namespace united_movers_api.Services.Interfaces
         //Task<int> InsertEmployeeAsync(Employee employee);
 
         //Task<bool> UpdateEmployeeAsync(Employee employee);
-
+        Task<IEnumerable<Roles>> GetEmployeeRolesAsync();
         Task<IEnumerable<DocumentTypes>> GetEmployeeDocumentTypesAsync();
         Task<EmployeeAttachment> GetAttachmentContentByAttachmentID(Guid attachmentID);
         Task<bool> AddEmployeeAttachmentAsync(EmployeeAttachment employeeAttachment);
@@ -25,6 +26,11 @@ namespace united_movers_api.Services.Interfaces
 
         Task<CreateEmployeeResponse> ValidateAndCreateEmployeeIDAsync(ValidateAndCreateEmployeeIDRequest request);
         Task<bool> ActivateOrDeactivateEmployeeAsync(ActivateOrDeactivateEmployeeRequest request);
+
+
+        Task<bool> DeleteEmployeeRoleAsync(int roleMappingID);
+        Task<bool> AddEmployeeRoleAsync(EmployeeRoleMapping employeeRoleMapping);
+        Task<IEnumerable<EmployeeRoleMapping>> GetEmployeeAssignedRolesByEmplID(int emplID);
 
     }
 }

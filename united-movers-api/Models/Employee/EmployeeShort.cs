@@ -15,5 +15,7 @@
         public string AadhaarNumber { get; set; }
 
         public string PanNumber { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

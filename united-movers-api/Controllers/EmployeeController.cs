@@ -63,6 +63,18 @@ namespace united_movers_api.Controllers
             var AttchmentWithContent = await _employeeService.GetAttachmentContentByAttachmentID(attachmentID);
             return AttchmentWithContent;
         }
+        //async Task<IEnumerable<EmployeeRoles>> GetEmployeeRolesAsync()
+        [HttpGet("GetEmployeeRoles")]
+        public async Task<IActionResult> GetEmployeeRoles()
+        {
+            var employeeRoles = await _employeeService.GetEmployeeRolesAsync();
+            if (employeeRoles == null)
+            {
+                return BadRequest("Failed to fetch all employee Roles");
+            }
+            return Ok(employeeRoles);
+        }
+
 
         [HttpGet("GetEmployeeDocumentTypes")]
         public async Task<IActionResult> GetEmployeeDocumentTypes()
@@ -250,6 +262,58 @@ namespace united_movers_api.Controllers
 
             return Ok("Employee activation status updated successfully");
         }
+
+
+        [HttpGet("GetEmployeeAssignedRolesByEmplID/{emplID}")]
+        public async Task<IActionResult> GetEmployeeAssignedRolesByEmplID(int employeeID)
+        {
+            var employeeRoles = await _employeeService.GetEmployeeAssignedRolesByEmplID(employeeID);
+            if (employeeRoles == null)
+            {
+                return BadRequest("Failed to fetch all employee roles");
+            }
+
+            return Ok(employeeRoles);
+        }
+
+        // POST: api/Employee/AddAttachment
+        [HttpPut("AddEmployeeRole")]
+        public async Task<IActionResult> AddEmployeeRole([FromBody] EmployeeRoleMapping request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _employeeService.AddEmployeeRoleAsync(request);
+
+            if (!result)
+            {
+                return BadRequest("Failed to add role");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpDelete("DeleteEmployeeRole/{mappingID}")]
+        public async Task<IActionResult> DeleteEmployeeRole(int mappingID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _employeeService.DeleteEmployeeRoleAsync(mappingID);
+
+            if (!result)
+            {
+                return BadRequest("Failed to delete role");
+            }
+
+            return Ok(result);
+        }
+
+
 
     }
 }
