@@ -1,4 +1,4 @@
-﻿using Isopoh.Cryptography.Argon2;
+﻿using Konscious.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Globalization;
@@ -14,15 +14,31 @@ namespace united_movers_api.Services
     {
         private readonly IConfiguration _configuration;
         private readonly IAuthRepository _authRepository;
+
+        private readonly String _salt = "your-salt-123456789";
         public AuthService(IConfiguration configuration, IAuthRepository authRepository)
         {
             _configuration = configuration;
             this._authRepository = authRepository;
         }
 
+        static string HashPassword(string password, byte[] salt)
+        {
+            using (var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password)))
+            {
+                argon2.Salt = salt;
+                argon2.DegreeOfParallelism = 8; // Number of threads
+                argon2.MemorySize = 65536; // Memory usage in KB
+                argon2.Iterations = 4; // Number of iterations
+
+                return Convert.ToBase64String(argon2.GetBytes(32)); // Hash output
+            }
+        }
+
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            request.Password = Argon2.Hash(request.Password);
+            request.Password = HashPassword(request.Password, Encoding.UTF8.GetBytes(_salt));
+
             var reader = await this._authRepository.AuthenticateAsync(request);
             if (reader == null)
             {
@@ -33,7 +49,7 @@ namespace united_movers_api.Services
             var fName = reader["FirstName"] != null ? reader["FirstName"].ToString() : "";
             var roles = reader["Roles"] != null ? reader["Roles"].ToString().Split(',').ToList() : new List<string>();
 
-            LoginResponse? res = new LoginResponse(userName, fName, true, roles){};
+            LoginResponse? res = new LoginResponse(userName, fName, true, roles) { };
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["JWT:SecretKey"]);
@@ -66,15 +82,21 @@ namespace united_movers_api.Services
 
         public bool ChangePassword(ChangePasswordRequest request)
         {
-            request.NewPassword = Argon2.Hash(request.NewPassword);
-            request.OldPassword = Argon2.Hash(request.OldPassword);
+          
+
+            request.NewPassword = HashPassword(request.NewPassword, Encoding.UTF8.GetBytes(_salt));
+            request.OldPassword = HashPassword(request.OldPassword, Encoding.UTF8.GetBytes(_salt));
+
+            //request.NewPassword = Argon2.Hash(request.NewPassword);
+            //request.OldPassword = Argon2.Hash(request.OldPassword);
 
             return this._authRepository.ChangePassword(request);
         }
 
         public bool ForgotPassword(ChangePasswordRequest request)
         {
-            request.NewPassword = Argon2.Hash(request.NewPassword);
+            request.NewPassword = HashPassword(request.NewPassword, Encoding.UTF8.GetBytes(_salt));
+            //request.NewPassword = Argon2.Hash(request.NewPassword);
             return this._authRepository.ForgotPassword(request);
         }
     }
