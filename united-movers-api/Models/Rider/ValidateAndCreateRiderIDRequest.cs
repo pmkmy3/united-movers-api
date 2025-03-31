@@ -3,6 +3,7 @@
     public class ValidateAndCreateRiderIDRequest
     {
         public int VendorID { get; set; }
+        public string ReferenceName { get; set; }
         public string FullName { get; set; }
       //  public string LastName { get; set; }
         public string Gender { get; set; }

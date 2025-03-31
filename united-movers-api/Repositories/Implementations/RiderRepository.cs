@@ -382,9 +382,9 @@ namespace united_movers_api.Repositories.Implementations
                                 Landmark = reader.IsDBNull(reader.GetOrdinal("Landmark")) ? "" : reader.GetString(reader.GetOrdinal("Landmark")),
                                 HighestDegreeEarned = reader.IsDBNull(reader.GetOrdinal("HighestDegreeEarned")) ? "" : reader.GetString(reader.GetOrdinal("HighestDegreeEarned")),
                                 PreviousOrgName = reader.IsDBNull(reader.GetOrdinal("PreviousOrgName")) ? "" : reader.GetString(reader.GetOrdinal("PreviousOrgName")),
-                                AccountNumber = reader.IsDBNull(reader.GetOrdinal("AccountNumber")) ? "" : reader.GetString(reader.GetOrdinal("AccountNumber")),
+                                BankAccountNumber = reader.IsDBNull(reader.GetOrdinal("AccountNumber")) ? "" : reader.GetString(reader.GetOrdinal("AccountNumber")),
                                 BankName = reader.IsDBNull(reader.GetOrdinal("BankName")) ? "" : reader.GetString(reader.GetOrdinal("BankName")),
-                                IFSCCode = reader.IsDBNull(reader.GetOrdinal("IFSCCode")) ? "" : reader.GetString(reader.GetOrdinal("IFSCCode")),
+                                BankIFSCCode = reader.IsDBNull(reader.GetOrdinal("IFSCCode")) ? "" : reader.GetString(reader.GetOrdinal("IFSCCode")),
                                 UANNumber = reader.IsDBNull(reader.GetOrdinal("UANNumber")) ? "" : reader.GetString(reader.GetOrdinal("UANNumber")),
                                 InsurancePolicyNumber = reader.IsDBNull(reader.GetOrdinal("InsurancePolicyNumber")) ? "" : reader.GetString(reader.GetOrdinal("InsurancePolicyNumber")),
                                 InsurerName = reader.IsDBNull(reader.GetOrdinal("InsurerName")) ? "" : reader.GetString(reader.GetOrdinal("InsurerName")),
@@ -599,6 +599,8 @@ namespace united_movers_api.Repositories.Implementations
                     command.CommandText = "[dbo].[UpdateRiderPersonalInformation]";
                     command.Parameters.Add(new SqlParameter("@RiderID", request.RiderID));
                     command.Parameters.Add(new SqlParameter("@FullName", request.FullName));
+                    command.Parameters.Add(new SqlParameter("@VendorID", request.VendorID));
+                    command.Parameters.Add(new SqlParameter("@ReferenceName", request.ReferenceName));
                     command.Parameters.Add(new SqlParameter("@Gender", request.Gender));
                     command.Parameters.Add(new SqlParameter("@DateOfBirth", request.DateOfBirth));
                     command.Parameters.Add(new SqlParameter("@AadhaarNumber", request.AadhaarNumber));
@@ -641,6 +643,7 @@ namespace united_movers_api.Repositories.Implementations
                     command.CommandText = "[dbo].[ValidateAndCreateRiderID]";
                     command.Parameters.Add(new SqlParameter("@VendorID", request.VendorID));
                     command.Parameters.Add(new SqlParameter("@FullName", request.FullName));
+                    command.Parameters.Add(new SqlParameter("@ReferenceName", request.ReferenceName));
                     command.Parameters.Add(new SqlParameter("@Gender", request.Gender));
                     command.Parameters.Add(new SqlParameter("@DateOfBirth", request.DateOfBirth));
                     command.Parameters.Add(new SqlParameter("@AadhaarNumber", request.AadhaarNumber));

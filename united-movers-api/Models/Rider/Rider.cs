@@ -27,9 +27,9 @@
         public string Landmark { get; set; }
         public string HighestDegreeEarned { get; set; }
         public string PreviousOrgName { get; set; }
-        public string AccountNumber { get; set; }
+        public string BankAccountNumber { get; set; }
         public string BankName { get; set; }
-        public string IFSCCode { get; set; }
+        public string BankIFSCCode { get; set; }
         public string UANNumber { get; set; }
         public string InsurancePolicyNumber { get; set; }
         public string InsurerName { get; set; }

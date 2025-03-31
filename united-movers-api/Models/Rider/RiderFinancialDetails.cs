@@ -2,6 +2,7 @@
 {
     public class RiderFinancialDetails
     {
+
         public int RiderID { get; set; }
         public string BankAccountNumber { get; set; }
         public string BankName { get; set; }
