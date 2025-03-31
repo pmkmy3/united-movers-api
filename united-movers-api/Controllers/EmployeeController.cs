@@ -264,7 +264,7 @@ namespace united_movers_api.Controllers
         }
 
 
-        [HttpGet("GetEmployeeAssignedRolesByEmplID/{emplID}")]
+        [HttpGet("GetEmployeeAssignedRolesByEmplID/{employeeID}")]
         public async Task<IActionResult> GetEmployeeAssignedRolesByEmplID(int employeeID)
         {
             var employeeRoles = await _employeeService.GetEmployeeAssignedRolesByEmplID(employeeID);
