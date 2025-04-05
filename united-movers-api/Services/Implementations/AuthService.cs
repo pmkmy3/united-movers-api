@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using united_movers_api.Common;
 using united_movers_api.Models;
 using united_movers_api.Repositories;
 
@@ -14,30 +15,20 @@ namespace united_movers_api.Services
     {
         private readonly IConfiguration _configuration;
         private readonly IAuthRepository _authRepository;
+        private readonly string _salt;
 
-        private readonly String _salt = "your-salt-123456789";
         public AuthService(IConfiguration configuration, IAuthRepository authRepository)
         {
             _configuration = configuration;
             this._authRepository = authRepository;
+            _salt = _configuration["Secret:SaltSecretKey"] ?? throw new ArgumentNullException(nameof(_configuration), "SaltSecretKey cannot be null");
         }
 
-        static string HashPassword(string password, byte[] salt)
-        {
-            using (var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password)))
-            {
-                argon2.Salt = salt;
-                argon2.DegreeOfParallelism = 8; // Number of threads
-                argon2.MemorySize = 65536; // Memory usage in KB
-                argon2.Iterations = 4; // Number of iterations
-
-                return Convert.ToBase64String(argon2.GetBytes(32)); // Hash output
-            }
-        }
+        
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            request.Password = HashPassword(request.Password, Encoding.UTF8.GetBytes(_salt));
+            request.Password = Utils.HashPassword(request.Password, Encoding.UTF8.GetBytes(_salt));
 
             var reader = await this._authRepository.AuthenticateAsync(request);
             if (reader == null)
@@ -47,7 +38,7 @@ namespace united_movers_api.Services
 
             var userName = reader["UserName"] != null ? reader["UserName"].ToString() : "";
             var fName = reader["FirstName"] != null ? reader["FirstName"].ToString() : "";
-            var roles = reader["Roles"] != null ? reader["Roles"].ToString().Split(',').ToList() : new List<string>();
+            var roles = reader["Roles"] != null ? reader["Roles"]?.ToString()?.Split(',').ToList() : new List<string>();
 
             LoginResponse? res = new LoginResponse(userName, fName, true, roles) { };
 
@@ -82,21 +73,14 @@ namespace united_movers_api.Services
 
         public bool ChangePassword(ChangePasswordRequest request)
         {
-          
-
-            request.NewPassword = HashPassword(request.NewPassword, Encoding.UTF8.GetBytes(_salt));
-            request.OldPassword = HashPassword(request.OldPassword, Encoding.UTF8.GetBytes(_salt));
-
-            //request.NewPassword = Argon2.Hash(request.NewPassword);
-            //request.OldPassword = Argon2.Hash(request.OldPassword);
-
+            request.NewPassword = Utils.HashPassword(request.NewPassword, Encoding.UTF8.GetBytes(_salt));
+            request.OldPassword = Utils.HashPassword(request.OldPassword, Encoding.UTF8.GetBytes(_salt));
             return this._authRepository.ChangePassword(request);
         }
 
         public bool ForgotPassword(ChangePasswordRequest request)
         {
-            request.NewPassword = HashPassword(request.NewPassword, Encoding.UTF8.GetBytes(_salt));
-            //request.NewPassword = Argon2.Hash(request.NewPassword);
+            request.NewPassword = Utils.HashPassword(request.NewPassword, Encoding.UTF8.GetBytes(_salt));
             return this._authRepository.ForgotPassword(request);
         }
     }

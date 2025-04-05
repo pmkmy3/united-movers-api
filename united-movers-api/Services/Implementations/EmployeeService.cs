@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
+using System.Text;
+using united_movers_api.Common;
 using united_movers_api.Models;
 using united_movers_api.Models.Common;
 using united_movers_api.Repositories.Implementations;
@@ -10,10 +12,12 @@ namespace united_movers_api.Services.Implementations
 {
     public class EmployeeService : IEmployeeService
     {
+        private readonly IConfiguration _configuration;
         private readonly IEmployeeRepository _employeeRepository;
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        public EmployeeService(IConfiguration configuration, IEmployeeRepository employeeRepository)
         {
+            _configuration = configuration;
             _employeeRepository = employeeRepository;
         }
 
@@ -99,8 +103,15 @@ namespace united_movers_api.Services.Implementations
 
         public async Task<bool> ActivateOrDeactivateEmployeeAsync(ActivateOrDeactivateEmployeeRequest request)
         {
+            if (request.ActivateEmployee)
+            {
+                string salt = _configuration["Secret:SaltSecretKey"] ?? throw new ArgumentNullException(nameof(_configuration), "SaltSecretKey cannot be null");
+                var password = Utils.GenerateRandomPassword(6);
+                request.Password = Utils.HashPassword(password, Encoding.UTF8.GetBytes(salt));
+            }
             return await _employeeRepository.ActivateOrDeactivateEmployeeAsync(request);
         }
+
 
     }
 }
