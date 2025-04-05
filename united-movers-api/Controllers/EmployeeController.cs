@@ -260,7 +260,7 @@ namespace united_movers_api.Controllers
                 return BadRequest("Failed to activate or deactivate employee");
             }
 
-            return Ok("Employee activation status updated successfully");
+            return Ok(result);
         }
 
 
