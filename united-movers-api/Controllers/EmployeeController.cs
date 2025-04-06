@@ -58,11 +58,16 @@ namespace united_movers_api.Controllers
         }
 
         [HttpGet("GetAttachmentContent/{attachmentID}")]
-        public async Task<EmployeeAttachment> GetAttachmentContentByAttachmentID(Guid attachmentID)
+        public async Task<IActionResult> GetAttachmentContentByAttachmentID(Guid attachmentID)
         {
             var AttchmentWithContent = await _employeeService.GetAttachmentContentByAttachmentID(attachmentID);
-            return AttchmentWithContent;
+            if(AttchmentWithContent == null)
+            {
+                return BadRequest("Failed to fetch Attachment details with content by id");
+            }
+            return Ok(AttchmentWithContent);
         }
+
         //async Task<IEnumerable<EmployeeRoles>> GetEmployeeRolesAsync()
         [HttpGet("GetEmployeeRoles")]
         public async Task<IActionResult> GetEmployeeRoles()
