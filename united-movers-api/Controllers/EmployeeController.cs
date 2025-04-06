@@ -87,7 +87,7 @@ namespace united_movers_api.Controllers
             return Ok(employeeDocumentTypes);
         }
 
-        // POST: api/Employee/AddAttachment
+        // PUT: api/Employee/AddAttachment
         [HttpPut("AddAttachment")]
         public async Task<IActionResult> AddEmployeeAttachment([FromBody] EmployeeAttachment request)
         {

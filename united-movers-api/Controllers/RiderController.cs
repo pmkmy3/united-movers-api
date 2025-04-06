@@ -72,8 +72,8 @@ namespace united_movers_api.Controllers
             return  Ok(riderDocumentTypes);
         }
 
-        // POST: api/Rider/AddAttachment
-        [HttpPost("AddAttachment")]
+        // PUT: api/Rider/AddAttachment
+        [HttpPut("AddAttachment")]
         public async Task<IActionResult> AddRiderAttachment([FromBody] RiderAttachment request)
         {
             if (!ModelState.IsValid)
@@ -88,7 +88,7 @@ namespace united_movers_api.Controllers
                 return BadRequest("Failed to add attachment");
             }
 
-            return Ok("Attachment added successfully");
+            return Ok(result);
         }
 
         [HttpDelete("DeleteAttachment/{attachmentID}")]
@@ -106,7 +106,7 @@ namespace united_movers_api.Controllers
                 return BadRequest("Failed to add attachment");
             }
 
-            return Ok("Attachment added successfully");
+            return Ok(result);
         }
 
         [HttpGet("GetAttachments/{riderID}")]
@@ -135,7 +135,7 @@ namespace united_movers_api.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(result);
         }
 
         // PUT: api/Rider/UpdateContactInformation
@@ -154,7 +154,7 @@ namespace united_movers_api.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(result);
         }
 
         // PUT: api/Rider/UpdateFinancialDetails
@@ -173,7 +173,7 @@ namespace united_movers_api.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(result);
         }
 
         [HttpPost("ValidateAndCreateRiderID")]
@@ -190,7 +190,7 @@ namespace united_movers_api.Controllers
                 {
                     return BadRequest("Failed to update RiderID");
                 }
-                return Ok("RiderID updated successfully");
+                return Ok(result);
             }
             else
             {
@@ -220,7 +220,7 @@ namespace united_movers_api.Controllers
                 return BadRequest("Failed to activate or deactivate Rider");
             }
 
-            return Ok("Rider activation status updated successfully");
+            return Ok(result);
         }
 
     }
