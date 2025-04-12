@@ -33,6 +33,14 @@ namespace united_movers_api.Services
             var res = await this._authRepository.AuthenticateAsync(request);
             if (res != null)
             {
+                if (res.IsTempPassword)
+                {
+                    return new LoginResponse()
+                    {
+                        IsTempPassword = true,
+                        UserId = res.UserId
+                    };
+                }
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_configuration["JWT:SecretKey"]);
 

@@ -19,6 +19,8 @@ namespace united_movers_api.Models
         public string? Token { get; set; }
         public bool IsTempPassword { get; set; }
 
+        public LoginResponse() { }
+
         public LoginResponse(string userId, string userName, string name, bool isTempPassword, List<string>? roles)
         {
             UserId = userId;
