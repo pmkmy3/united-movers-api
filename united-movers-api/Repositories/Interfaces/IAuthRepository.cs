@@ -5,7 +5,7 @@ namespace united_movers_api.Repositories
 {
     public interface IAuthRepository
     {
-        Task<IDataReader> AuthenticateAsync(LoginRequest request);
+        Task<LoginResponse> AuthenticateAsync(LoginRequest request);
 
         bool ChangePassword(ChangePasswordRequest request);
 

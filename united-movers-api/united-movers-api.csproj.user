@@ -12,5 +12,6 @@
     <WebStackScaffolding_DbContextTypeFullName>united_movers_api.Models.UnitedMoversDbContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
     <WebStackScaffolding_IsViewGenerationSelected>False</WebStackScaffolding_IsViewGenerationSelected>
+    <NameOfLastUsedPublishProfile>C:\Users\kanap\OneDrive\Documents\Drive-D\UnitedMovers\Sourcecode\api\United-Movers-API\united-movers-api\Properties\PublishProfiles\unitedmovers - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

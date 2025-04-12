@@ -5,7 +5,7 @@ namespace united_movers_api.Models
     public class LoginResponse
     {
         [Key]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
 
@@ -19,8 +19,9 @@ namespace united_movers_api.Models
         public string? Token { get; set; }
         public bool IsTempPassword { get; set; }
 
-        public LoginResponse(string userName, string name, bool isTempPassword, List<string>? roles)
+        public LoginResponse(string userId, string userName, string name, bool isTempPassword, List<string>? roles)
         {
+            UserId = userId;
             UserName = userName;
             FirstName = name;
             IsTempPassword = isTempPassword;

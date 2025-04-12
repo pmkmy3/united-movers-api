@@ -106,7 +106,7 @@ namespace united_movers_api.Services.Implementations
             if (request.ActivateEmployee)
             {
                 string salt = _configuration["Secret:SaltSecretKey"] ?? throw new ArgumentNullException(nameof(_configuration), "SaltSecretKey cannot be null");
-                var password = Utils.GenerateRandomPassword(6);
+                var password = "UM@1234"; //Utils.GenerateRandomPassword(6);
                 request.Password = Utils.HashPassword(password, Encoding.UTF8.GetBytes(salt));
             }
             return await _employeeRepository.ActivateOrDeactivateEmployeeAsync(request);

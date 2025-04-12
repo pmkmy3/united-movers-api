@@ -30,45 +30,36 @@ namespace united_movers_api.Services
         {
             request.Password = Utils.HashPassword(request.Password, Encoding.UTF8.GetBytes(_salt));
 
-            var reader = await this._authRepository.AuthenticateAsync(request);
-            if (reader == null)
+            var res = await this._authRepository.AuthenticateAsync(request);
+            if (res != null)
             {
-                throw new Exception("Invalid username or password");
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_configuration["JWT:SecretKey"]);
+
+                var claims = new List<Claim>
+                {
+                    new Claim("UserId", res.UserId.ToString()),
+                    new Claim(ClaimTypes.Name, res.UserName)
+                };
+                foreach (var role in res.Roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    IssuedAt = DateTime.UtcNow,
+                    Issuer = _configuration["JWT:Issuer"],
+                    Audience = _configuration["JWT:Audience"],
+                    Expires = DateTime.UtcNow.AddMinutes(30),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                res.Token = tokenHandler.WriteToken(token);
+                res.IsActive = true;
+                return res;
             }
-
-            var userName = reader["UserName"] != null ? reader["UserName"].ToString() : "";
-            var fName = reader["FirstName"] != null ? reader["FirstName"].ToString() : "";
-            var roles = reader["Roles"] != null ? reader["Roles"]?.ToString()?.Split(',').ToList() : new List<string>();
-
-            LoginResponse? res = new LoginResponse(userName, fName, true, roles) { };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["JWT:SecretKey"]);
-
-            var claims = new List<Claim>
-            {
-                new Claim("UserId", res.UserId.ToString()),
-                new Claim(ClaimTypes.Name, res.UserName)
-            };
-            foreach (var role in res.Roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                IssuedAt = DateTime.UtcNow,
-                Issuer = _configuration["JWT:Issuer"],
-                Audience = _configuration["JWT:Audience"],
-                Expires = DateTime.UtcNow.AddMinutes(30),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            res.Token = tokenHandler.WriteToken(token);
-            res.IsActive = true;
-
-            return res;
+            return null;
         }
 
         public bool ChangePassword(ChangePasswordRequest request)

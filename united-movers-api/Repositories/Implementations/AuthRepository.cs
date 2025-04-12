@@ -13,7 +13,7 @@ namespace united_movers_api.Repositories
             this._dbConnection = dbConnection;
         }
 
-        public async Task<IDataReader> AuthenticateAsync(LoginRequest request)
+        public async Task<LoginResponse> AuthenticateAsync(LoginRequest request)
         {
             try
             {
@@ -29,7 +29,12 @@ namespace united_movers_api.Repositories
 
                     if (reader.Read())
                     {
-                        return reader;
+                        var userID = reader["EmployeeID"] != null ? reader["EmployeeID"].ToString() : "";
+                        var userName = reader["UserName"] != null ? reader["UserName"].ToString() : "";
+                        var fName = reader["FirstName"] != null ? reader["FirstName"].ToString() : "";
+                        var roles = reader["Roles"] != null ? reader["Roles"]?.ToString()?.Split(',').ToList() : new List<string>();
+                        LoginResponse? res = new LoginResponse(userID, userName, fName, true, roles) { };
+                        return res;
                     }
                     return null;
                 }
