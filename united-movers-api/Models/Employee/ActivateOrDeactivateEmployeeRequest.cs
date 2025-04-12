@@ -9,5 +9,7 @@ namespace united_movers_api.Models
         public string LoggedInUser { get; set; }
         public string Comments { get; set; }
         public string Password { get; set; }
+
+        public DateTime? ActivationDate { get; set; }
     }
 }
