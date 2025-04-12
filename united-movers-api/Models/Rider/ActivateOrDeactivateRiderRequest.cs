@@ -6,7 +6,7 @@ namespace united_movers_api.Models
     {
         public int RiderID { get; set; }
         public bool ActivateRider { get; set; }
-        public string LoggedInUser { get; set; }
+        public int LoggedInUser { get; set; }
         public string Comments { get; set; }
 
         public DateTime? ActivationDate { get; set; }
