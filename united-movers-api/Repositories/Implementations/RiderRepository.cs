@@ -437,7 +437,7 @@ namespace united_movers_api.Repositories.Implementations
 
 
                     command.Parameters.Add(new SqlParameter("@RiderID", request.RiderID));
-                    command.Parameters.Add(new SqlParameter("@ActivateEmployee", request.ActivateRider));
+                    command.Parameters.Add(new SqlParameter("@ActivateRider", request.ActivateRider));
                     command.Parameters.Add(new SqlParameter("@LoggedInUser", request.LoggedInUser));
                     command.Parameters.Add(new SqlParameter("@Comments", request.Comments));
                     command.Parameters.Add(new SqlParameter("@ActivationDate", request.ActivationDate));
