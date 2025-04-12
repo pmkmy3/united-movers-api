@@ -32,8 +32,10 @@ namespace united_movers_api.Repositories
                         var userID = reader["EmployeeID"] != null ? reader["EmployeeID"].ToString() : "";
                         var userName = reader["UserName"] != null ? reader["UserName"].ToString() : "";
                         var fName = reader["FirstName"] != null ? reader["FirstName"].ToString() : "";
+                        var lname = reader["LastName"] != null ? reader["LastName"].ToString() : "";
+                        var isTempPassword = reader["IsTempPAssword"] != null ? Convert.ToBoolean(reader["IsTempPAssword"]) : false;
                         var roles = reader["Roles"] != null ? reader["Roles"]?.ToString()?.Split(',').ToList() : new List<string>();
-                        LoginResponse? res = new LoginResponse(userID, userName, fName, true, roles) { };
+                        LoginResponse? res = new LoginResponse(userID, userName, fName, isTempPassword, roles) { };
                         return res;
                     }
                     return null;
