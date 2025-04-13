@@ -1,5 +1,7 @@
 ﻿using Konscious.Security.Cryptography;
 using System.Data;
+using System.Net.Mail;
+using System.Net;
 using System.Text;
 
 namespace united_movers_api.Common
@@ -15,6 +17,42 @@ namespace united_movers_api.Common
             return parameter;
         }
 
+        public static bool SendEmail(String emailAddress, string subject, string body)
+        {
+            string fromEmail = "otp.unitedmovers@gmail.com";
+            string password = "lnep ngge pfcj usmz"; // Use an app password if 2FA is enabled
+
+            // Recipient email
+            string toEmail = emailAddress;
+
+            // Email content
+
+            try
+            {
+                MailMessage message = new MailMessage();
+                message.From = new MailAddress(fromEmail);
+                message.To.Add(toEmail);
+                message.Subject = subject;
+                message.Body = body;
+
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                smtp.EnableSsl = true;
+                smtp.Credentials = new NetworkCredential(fromEmail, password);
+
+                smtp.Send(message);
+                return true;
+                //Console.WriteLine("Email sent successfully.");
+            }
+            catch (Exception ex)
+            {
+                return false;
+                //Console.WriteLine("Error sending email: " + ex.Message);
+            }
+
+
+           
+           
+        }
         public static string HashPassword(string password, byte[] salt)
         {
             using (var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password)))
