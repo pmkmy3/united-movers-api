@@ -103,16 +103,21 @@ namespace united_movers_api.Services.Implementations
 
         public async Task<bool> ActivateOrDeactivateEmployeeAsync(ActivateOrDeactivateEmployeeRequest request)
         {
-            var password = request.Password;
             if (request.ActivateEmployee)
             {
+                var password = Utils.GenerateRandomPassword(6);
                 string salt = _configuration["Secret:SaltSecretKey"] ?? throw new ArgumentNullException(nameof(_configuration), "SaltSecretKey cannot be null");
-                // var password = "UM@1234"; //Utils.GenerateRandomPassword(6);
+                // var password = "UM@1234"; //
                 request.Password = Utils.HashPassword(password, Encoding.UTF8.GetBytes(salt));
+                if (await _employeeRepository.ActivateOrDeactivateEmployeeAsync(request))
+                {
+                    Utils.SendEmail("srujankiran@gmail.com", "Account Activation", "Your account has been activated. Your password is: " + password);
+                    return true;
+                }
             }
-            if(await _employeeRepository.ActivateOrDeactivateEmployeeAsync(request))
+            else if (await _employeeRepository.ActivateOrDeactivateEmployeeAsync(request))
             {
-                Utils.SendEmail("srujankiran@gmail.com", "Account Activation", "Your account has been activated. Your password is: " + password);
+                Utils.SendEmail("srujankiran@gmail.com", "Account Deactivation", "Your account has been deactivated. Please contact administrator");
                 return true;
             }
             return false;
