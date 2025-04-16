@@ -109,7 +109,12 @@ namespace united_movers_api.Services.Implementations
                 var password = "UM@1234"; //Utils.GenerateRandomPassword(6);
                 request.Password = Utils.HashPassword(password, Encoding.UTF8.GetBytes(salt));
             }
-            return await _employeeRepository.ActivateOrDeactivateEmployeeAsync(request);
+            if(await _employeeRepository.ActivateOrDeactivateEmployeeAsync(request))
+            {
+                Utils.SendEmail("srujankiran@gmail.com", "Account Activation", "Your account has been activated. Your password is: " + request.Password);
+                return true;
+            }
+            return false;
         }
 
 
